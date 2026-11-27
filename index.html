@@ -561,10 +561,6 @@
       <!-- 真實 Google Identity Services 一鍵登入 -->
       <div class="space-y-2">
         <div id="g-signin-btn-login" class="flex justify-center min-h-[44px]"></div>
-        <button type="button" onclick="openGoogleChooser('login')" class="w-full py-2 px-3 rounded-xl border border-neutral-200 hover:bg-neutral-50 flex items-center justify-center gap-2 text-xs font-semibold text-neutral-600 transition">
-          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.615 24 12.255 24z"/><path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 0 0 0 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.64 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-          預覽沙盒備用 Google 選擇器
-        </button>
       </div>
 
       <div class="flex items-center gap-3 text-xs text-neutral-400">
@@ -577,7 +573,34 @@
           <input id="login-username" type="text" placeholder="請輸入帳號（3–20 碼英數底線）" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900" />
         </div>
         <button type="button" onclick="submitLogin()" class="w-full py-3 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-sm font-extrabold transition">登入</button>
-        <button type="button" onclick="quickDemoLogin()" class="w-full py-2.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-extrabold transition">一鍵使用示範帳號登入（王小明 student01）</button>
+        <div class="space-y-2">
+          <button type="button" onclick="toggleDemoAccountList()" class="w-full py-2.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-extrabold transition flex items-center justify-center gap-1.5">
+            <span>一鍵使用示範帳號登入</span>
+            <svg id="demo-list-chevron" class="w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="demo-account-list" class="hidden grid grid-cols-1 gap-2 pt-1">
+            <button type="button" onclick="quickDemoLogin('student01')" class="p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/70 flex items-center justify-between text-left transition">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-extrabold flex items-center justify-center shrink-0">王</div>
+                <div>
+                  <p class="text-xs font-extrabold text-neutral-900">王小明 <span class="font-mono text-[11px] text-neutral-500">(@student01)</span></p>
+                  <p class="text-[11px] text-neutral-500">一般會員 · 含手搖飲歷史訂單</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-white text-neutral-700 text-[10px] font-bold border border-neutral-200 shrink-0">選擇登入</span>
+            </button>
+            <button type="button" onclick="quickDemoLogin('student02')" class="p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-100/70 flex items-center justify-between text-left transition">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-brand text-neutral-950 text-xs font-extrabold flex items-center justify-center shrink-0">林</div>
+                <div>
+                  <p class="text-xs font-extrabold text-neutral-900">林佳穎 <span class="font-mono text-[11px] text-neutral-500">(@student02)</span></p>
+                  <p class="text-[11px] text-emerald-700 font-bold">One 尊榮會員 · 免運＋PRO85 折扣</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-brand text-neutral-950 text-[10px] font-extrabold shrink-0">選擇登入</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="pt-3 border-t border-neutral-100 text-center text-xs text-neutral-500">
@@ -659,34 +682,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 7：Google 帳戶選擇模擬 ==================== -->
-  <div id="google-modal" role="dialog" aria-modal="true" aria-labelledby="google-modal-title" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.615 24 12.255 24z"/><path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 0 0 0 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.64 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-          <h3 id="google-modal-title" class="text-base font-extrabold">選擇 Google 帳戶</h3>
-        </div>
-        <button type="button" onclick="closeGoogleModal()" class="w-7 h-7 rounded-full bg-neutral-100 font-bold text-xs">✕</button>
-      </div>
-      <div class="space-y-2">
-        <button type="button" onclick="selectGoogleAccount('王小明', 'ming.wang@gmail.com')" class="w-full p-3 rounded-2xl border border-neutral-200 hover:bg-neutral-50 flex items-center gap-3 text-left">
-          <div class="w-9 h-9 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center">王</div>
-          <div class="text-xs"><p class="font-bold text-neutral-900">王小明</p><p class="text-neutral-500">ming.wang@gmail.com</p></div>
-        </button>
-        <button type="button" onclick="selectGoogleAccount('林佳穎', 'chia.lin@gmail.com')" class="w-full p-3 rounded-2xl border border-neutral-200 hover:bg-neutral-50 flex items-center gap-3 text-left">
-          <div class="w-9 h-9 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center">林</div>
-          <div class="text-xs"><p class="font-bold text-neutral-900">林佳穎</p><p class="text-neutral-500">chia.lin@gmail.com</p></div>
-        </button>
-      </div>
-      <div class="pt-3 border-t border-neutral-100 space-y-2">
-        <input id="custom-gmail-input" type="email" placeholder="或輸入其他 Gmail（如 you@gmail.com）" class="w-full px-3 py-2 rounded-xl border border-neutral-300 text-xs" />
-        <button type="button" onclick="submitCustomGoogleAccount()" class="w-full py-2 rounded-xl bg-neutral-900 text-white text-xs font-bold">使用此 Gmail 繼續</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== Modal 8：我的帳號與個人資料設定 ==================== -->
+  <!-- ==================== Modal 7：我的帳號與個人資料設定 ==================== -->
   <div id="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-modal-title" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
     <div class="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
       <div class="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
@@ -772,7 +768,7 @@
     </div>
   </div>
 
-  <!-- ==================== Modal 9：FoodOrder One 會員管理 ==================== -->
+  <!-- ==================== Modal 8：FoodOrder One 會員管理 ==================== -->
   <div id="vip-modal" role="dialog" aria-modal="true" aria-labelledby="vip-modal-title" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5">
       <div class="flex items-center justify-between">
@@ -825,6 +821,14 @@
       { id: "c1", brand: "VISA", last4: "4242", expiry: "08/28" },
       { id: "c2", brand: "Mastercard", last4: "8819", expiry: "11/27" },
       { id: "c3", brand: "JCB", last4: "3528", expiry: "04/29" }
+    ];
+
+    const PAYMENT_METHODS = [
+      { id: "cod", label: "貨到付款（現金）", desc: "取餐時直接以現金支付給外送員或門市" },
+      { id: "card", label: "信用卡／簽帳金融卡", desc: "支援 VISA、Mastercard、JCB" },
+      { id: "linepay", label: "LINE Pay", desc: "使用 LINE Pay 行動條碼快速付款" },
+      { id: "applepay", label: "Apple Pay", desc: "Face ID / Touch ID 一觸即付" },
+      { id: "jkopay", label: "街口支付", desc: "支援街口幣折抵與帳戶扣款" }
     ];
 
     // ==========================================
@@ -1200,6 +1204,56 @@
               promo_code: ""
             }
           ]
+        },
+        student02: {
+          username: "student02",
+          display_name: "林佳穎",
+          phone: "0988765432",
+          birthday: "2002-11-08",
+          address: "台中市霧峰區柳豐路500號（亞洲大學）",
+          address_note: "管理學院一樓大廳",
+          is_vip: true,
+          google_sub: "",
+          google_email: "",
+          google_picture: "",
+          carrier_code: "/VIP2026",
+          saved_cards: [...DEFAULT_SAVED_CARDS],
+          favorites: ["r7", "r11", "r4"],
+          cart: [],
+          orders: [
+            {
+              order_id: "ORD-DEMO-002",
+              created_at: formatRelativeDate(-172800000),
+              delivery_mode: "delivery",
+              delivery_address: "台中市霧峰區柳豐路500號（亞洲大學）",
+              payment_label: "LINE Pay",
+              invoice_label: "手機條碼載具 /VIP2026",
+              status_index: 3,
+              items: [
+                {
+                  restaurant_id: "r7",
+                  restaurant_name: "麥當勞 McDonald's（霧峰中正店）",
+                  restaurant_category: "速食",
+                  item_id: "m701",
+                  name: "大麥克®",
+                  category: "超值全餐",
+                  base_price: 78,
+                  unit_price: 143,
+                  qty: 2,
+                  ice: "熱飲／不適用",
+                  sugar: "無糖／不適用",
+                  addons: ["升級經典配餐（中薯+$38飲）"],
+                  note: ""
+                }
+              ],
+              subtotal: 286,
+              delivery_fee: 0,
+              service_fee: 0,
+              discount: 43,
+              total: 243,
+              promo_code: "PRO85"
+            }
+          ]
         }
       };
     }
@@ -1289,154 +1343,166 @@
     // ==========================================
     const MODAL_IDS = [
       "menu-modal", "custom-modal", "address-modal", "confirm-checkout-modal",
-      "login-modal", "register-modal", "google-modal", "account-modal", "vip-modal"
+      "login-modal", "register-modal", "account-modal", "vip-modal"
     ];
 
     function updateBodyScrollLock() {
-      const anyOpen = MODAL_IDS.some(id => !document.getElementById(id).classList.contains("hidden"));
-      document.body.style.overflow = anyOpen ? "hidden" : "";
+      const anyOpen = MODAL_IDS.some(id => {
+        const el = document.getElementById(id);
+        return el && !el.classList.contains("hidden");
+      });
+      document.body.classList.toggle("overflow-hidden", anyOpen);
     }
 
     function openModalById(id) {
-      if (!MODAL_IDS.some(mid => !document.getElementById(mid).classList.contains("hidden"))) {
-        lastTriggerEl = document.activeElement;
-      }
-      const el = document.getElementById(id);
-      el.classList.remove("hidden");
+      lastTriggerEl = document.activeElement;
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.remove("hidden");
       updateBodyScrollLock();
-      const focusable = el.querySelector("input, button, select, a");
-      if (focusable) setTimeout(() => focusable.focus(), 30);
     }
 
     function closeModalById(id) {
-      document.getElementById(id).classList.add("hidden");
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.classList.add("hidden");
       updateBodyScrollLock();
-      const anyOpen = MODAL_IDS.some(mid => !document.getElementById(mid).classList.contains("hidden"));
-      if (!anyOpen && lastTriggerEl && typeof lastTriggerEl.focus === "function") {
+      if (lastTriggerEl && typeof lastTriggerEl.focus === "function") {
         lastTriggerEl.focus();
-        lastTriggerEl = null;
       }
     }
 
     document.addEventListener("keydown", e => {
       if (e.key !== "Escape") return;
       for (let i = MODAL_IDS.length - 1; i >= 0; i--) {
-        const id = MODAL_IDS[i];
-        if (!document.getElementById(id).classList.contains("hidden")) {
-          if (id === "menu-modal") closeMenuModal();
-          else closeModalById(id);
+        const modal = document.getElementById(MODAL_IDS[i]);
+        if (modal && !modal.classList.contains("hidden")) {
+          closeModalById(MODAL_IDS[i]);
           break;
         }
       }
     });
 
+    MODAL_IDS.forEach(id => {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.addEventListener("click", e => {
+        if (e.target === modal) closeModalById(id);
+      });
+    });
+
     function showToast(msg, actionLabel = "", actionFn = null) {
-      const el = document.getElementById("toast");
+      const toast = document.getElementById("toast");
       const msgEl = document.getElementById("toast-msg");
       const btnEl = document.getElementById("toast-action-btn");
+      if (!toast || !msgEl || !btnEl) return;
+
       msgEl.textContent = msg;
-      if (actionLabel && actionFn) {
+      if (actionLabel && typeof actionFn === "function") {
         btnEl.textContent = actionLabel;
         btnEl.classList.remove("hidden");
         btnEl.onclick = () => {
+          toast.classList.add("hidden");
           actionFn();
-          el.classList.add("hidden");
         };
       } else {
         btnEl.classList.add("hidden");
         btnEl.onclick = null;
       }
-      el.classList.remove("hidden");
+
+      toast.classList.remove("hidden");
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.add("hidden"), 3200);
+      toastTimer = setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3600);
     }
 
     // ==========================================
-    // 5. 核心演算法：智慧口味分析 & 購物車計費
+    // 5. 頂部狀態列、分頁切換與搜尋分流
     // ==========================================
-    function analyzeUserPreferences(user) {
-      const counts = {};
-      (user.orders || []).forEach(order => {
-        (order.items || []).forEach(item => {
-          if (item.restaurant_category) {
-            counts[item.restaurant_category] = (counts[item.restaurant_category] || 0) + (item.qty || 1);
-          }
-        });
-      });
+    function renderHeader() {
+      const u = getUser();
+      const logged = isLoggedIn();
 
-      const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-      if (!entries.length) {
-        const top = [...RESTAURANTS].sort((a, b) => b.rating - a.rating).slice(0, 8);
-        return {
-          has_history: false,
-          taste_stats: {},
-          reason: isLoggedIn()
-            ? "依據高評分與人氣精選 8 家熱門餐廳，完成首筆訂單後將為您分析專屬口味！"
-            : "登入並開始點餐後，系統將依據您的歷史口味偏好智慧推薦專屬餐廳。",
-          restaurants: top
-        };
+      // 外送 / 自取切換按鈕
+      const delBtn = document.getElementById("mode-delivery");
+      const pickBtn = document.getElementById("mode-pickup");
+      delBtn.className = deliveryMode === "delivery"
+        ? "px-3.5 py-1.5 rounded-full bg-neutral-950 text-white shadow-sm transition"
+        : "px-3.5 py-1.5 rounded-full text-neutral-600 hover:text-neutral-950 transition";
+      pickBtn.className = deliveryMode === "pickup"
+        ? "px-3.5 py-1.5 rounded-full bg-neutral-950 text-white shadow-sm transition"
+        : "px-3.5 py-1.5 rounded-full text-neutral-600 hover:text-neutral-950 transition";
+
+      // 頂部地址文字
+      const addrText = deliveryMode === "pickup"
+        ? "來店自取（免外送費）"
+        : (u.address || GUEST_ADDRESS);
+      document.getElementById("header-address-label").textContent = addrText;
+      document.getElementById("mobile-address-label").textContent = addrText;
+
+      // VIP 按鈕與首頁橫幅
+      const vipBtn = document.getElementById("vip-badge-btn");
+      const heroBtn = document.getElementById("hero-vip-btn");
+      const heroDesc = document.getElementById("hero-vip-desc");
+      if (u.is_vip) {
+        vipBtn.textContent = "👑 FoodOrder One 已啟用";
+        vipBtn.className = "hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-extrabold transition";
+        heroBtn.textContent = "管理 One 會員權益";
+        heroDesc.innerHTML = '您已享有無上限 <strong>$0 外送費</strong> 與 <strong>$0 平台服務費</strong>，結帳可輸入專屬折扣碼 <span class="text-white font-bold">PRO85</span> 或 <span class="text-white font-bold">VIP50</span>。';
+      } else {
+        vipBtn.textContent = "升級 One 免運";
+        vipBtn.className = "hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-extrabold transition";
+        heroBtn.textContent = "立即免費試用 One";
+        heroDesc.innerHTML = '升級 FoodOrder One 立即免除 $39 外送費與 $15 平台服務費，並解鎖專屬折扣碼 <span class="text-white font-bold">PRO85</span>（85折）與 <span class="text-white font-bold">VIP50</span>（現折$50）。';
       }
 
-      const [topCat, topCount] = entries[0];
-      const preferred = RESTAURANTS.filter(r => r.category === topCat);
-      const others = RESTAURANTS.filter(r => r.category !== topCat).sort((a, b) => b.rating - a.rating);
-      const combined = [...preferred, ...others].slice(0, 8);
+      // 帳號頭像與名字
+      const avatarImg = document.getElementById("account-avatar-img");
+      const avatarSpan = document.getElementById("account-avatar");
+      const guestIcon = document.getElementById("account-guest-icon");
+      const nameLabel = document.getElementById("user-name-label");
 
-      return {
-        has_history: true,
-        taste_stats: counts,
-        reason: `根據歷史點餐分析，您最偏愛「${topCat}」（累計 ${topCount} 份），已優先為您排序推薦！`,
-        restaurants: combined
-      };
-    }
-
-    function calculateCartSummary(user, mode, rawCode) {
-      const subtotal = user.cart.reduce((s, i) => s + i.unit_price * i.qty, 0);
-      if (subtotal === 0) {
-        return { subtotal: 0, delivery_fee: 0, service_fee: 0, discount: 0, total: 0, promo_msg: "", promo_valid: false };
-      }
-
-      const isVip = user.is_vip;
-      const delivery_fee = (mode === "pickup" || isVip) ? 0 : PRICING.DELIVERY_FEE;
-      const service_fee = isVip ? 0 : PRICING.SERVICE_FEE;
-
-      let discount = 0;
-      let promo_msg = "";
-      let promo_valid = false;
-      const code = (rawCode || "").trim().toUpperCase();
-
-      if (code) {
-        if (!isVip) {
-          promo_msg = "此優惠碼僅限 FoodOrder One 付費會員使用，請先升級或清除優惠碼。";
-        } else if (PRICING.VIP_PROMO_CODES[code]) {
-          const rule = PRICING.VIP_PROMO_CODES[code];
-          discount = rule.type === "percent" ? Math.round(subtotal * rule.value) : Math.min(subtotal, rule.value);
-          promo_msg = `已套用 ${code}（${rule.label}），現省 $${discount}`;
-          promo_valid = true;
+      if (logged) {
+        guestIcon.classList.add("hidden");
+        nameLabel.textContent = u.display_name || u.username;
+        if (u.google_picture) {
+          avatarImg.src = u.google_picture;
+          avatarImg.classList.remove("hidden");
+          avatarSpan.classList.add("hidden");
         } else {
-          promo_msg = "無效的優惠碼（One 會員可輸入 PRO85 或 VIP50）";
+          avatarImg.classList.add("hidden");
+          avatarSpan.textContent = (u.display_name || "U").slice(0, 1);
+          avatarSpan.classList.remove("hidden");
+          avatarSpan.classList.add("inline-flex");
         }
+      } else {
+        avatarImg.classList.add("hidden");
+        avatarSpan.classList.add("hidden");
+        avatarSpan.classList.remove("inline-flex");
+        guestIcon.classList.remove("hidden");
+        nameLabel.textContent = "登入";
       }
 
-      const total = Math.max(0, subtotal + delivery_fee + service_fee - discount);
-      return { subtotal, delivery_fee, service_fee, discount, total, promo_msg, promo_valid };
+      // 購物車數量角標
+      const totalQty = u.cart.reduce((acc, item) => acc + item.qty, 0);
+      document.getElementById("cart-count-badge").textContent = totalQty;
+
+      // 主導覽分頁高亮
+      ["home", "favorites", "orders", "cart"].forEach(tab => {
+        const el = document.getElementById(`tab-${tab}`);
+        if (!el) return;
+        el.className = tab === currentTab
+          ? "py-3 border-b-2 border-neutral-950 text-neutral-950 whitespace-nowrap transition"
+          : "py-3 border-b-2 border-transparent text-neutral-500 hover:text-neutral-900 whitespace-nowrap transition";
+      });
     }
 
-    // ==========================================
-    // 6. 畫面渲染：頂部、首頁、口袋名單、訂單、購物車
-    // ==========================================
     function switchTab(tab) {
       currentTab = tab;
       ["home", "favorites", "orders", "cart"].forEach(t => {
-        document.getElementById(`view-${t}`).classList.toggle("hidden", t !== tab);
-        const btn = document.getElementById(`tab-${t}`);
-        if (t === tab) {
-          btn.classList.add("border-neutral-950", "text-neutral-950");
-          btn.classList.remove("border-transparent", "text-neutral-500");
-        } else {
-          btn.classList.remove("border-neutral-950", "text-neutral-950");
-          btn.classList.add("border-transparent", "text-neutral-500");
-        }
+        const sec = document.getElementById(`view-${t}`);
+        if (sec) sec.classList.toggle("hidden", t !== tab);
       });
       renderActiveView();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1450,548 +1516,556 @@
       else if (currentTab === "cart") renderCart();
     }
 
-    function renderHeader() {
-      const user = getUser();
-      const cartQty = user.cart.reduce((s, i) => s + i.qty, 0);
-      document.getElementById("cart-count-badge").textContent = cartQty;
-
-      // 地址顯示
-      const addrText = user.address || GUEST_ADDRESS;
-      document.getElementById("header-address-label").textContent = addrText;
-      document.getElementById("mobile-address-label").textContent = addrText;
-
-      // 外送 / 自取切換按鈕
-      const delBtn = document.getElementById("mode-delivery");
-      const pickBtn = document.getElementById("mode-pickup");
-      delBtn.className = deliveryMode === "delivery"
-        ? "px-3.5 py-1.5 rounded-full bg-white text-neutral-950 shadow-sm transition"
-        : "px-3.5 py-1.5 rounded-full text-neutral-500 hover:text-neutral-900 transition";
-      pickBtn.className = deliveryMode === "pickup"
-        ? "px-3.5 py-1.5 rounded-full bg-white text-neutral-950 shadow-sm transition"
-        : "px-3.5 py-1.5 rounded-full text-neutral-500 hover:text-neutral-900 transition";
-
-      // 帳號顯示
-      const avatarImg = document.getElementById("account-avatar-img");
-      const avatarEl = document.getElementById("account-avatar");
-      const guestIcon = document.getElementById("account-guest-icon");
-      const nameLabel = document.getElementById("user-name-label");
-      if (isLoggedIn()) {
-        nameLabel.textContent = user.display_name;
-        guestIcon.classList.add("hidden");
-        if (user.google_picture) {
-          avatarImg.src = user.google_picture;
-          avatarImg.classList.remove("hidden");
-          avatarEl.classList.add("hidden");
-          avatarEl.classList.remove("inline-flex");
-        } else {
-          avatarImg.classList.add("hidden");
-          avatarEl.textContent = (user.display_name || "U").slice(0, 1);
-          avatarEl.classList.remove("hidden");
-          avatarEl.classList.add("inline-flex");
-        }
-      } else {
-        nameLabel.textContent = "登入";
-        avatarImg.classList.add("hidden");
-        avatarEl.classList.add("hidden");
-        avatarEl.classList.remove("inline-flex");
-        guestIcon.classList.remove("hidden");
-      }
-
-      // VIP 狀態按鈕與 Hero 橫幅
-      const vipBtn = document.getElementById("vip-badge-btn");
-      const heroBtn = document.getElementById("hero-vip-btn");
-      const heroDesc = document.getElementById("hero-vip-desc");
-      if (isLoggedIn() && user.is_vip) {
-        vipBtn.textContent = "One 會員";
-        vipBtn.className = "hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition";
-        heroBtn.textContent = "管理 One 會員方案";
-        heroDesc.innerHTML = `您目前已是 <span class="text-brand font-bold">FoodOrder One 尊榮會員</span>，結帳享免外送費、免服務費，並可使用 <span class="text-white font-bold">PRO85</span> 與 <span class="text-white font-bold">VIP50</span> 折扣碼。`;
-      } else {
-        vipBtn.textContent = "升級 One";
-        vipBtn.className = "hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-extrabold bg-brand/15 text-emerald-900 hover:bg-brand/25 transition";
-        heroBtn.textContent = "立即免費試用 One";
-        heroDesc.innerHTML = `升級 FoodOrder One 立即免除 $${PRICING.DELIVERY_FEE} 外送費與 $${PRICING.SERVICE_FEE} 平台服務費，並解鎖專屬折扣碼 <span class="text-white font-bold">PRO85</span>（85折）與 <span class="text-white font-bold">VIP50</span>（現折$50）。`;
-      }
-    }
-
-    function heartSvg(isFav) {
-      return isFav
-        ? `<svg class="w-4 h-4 text-rose-500 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`
-        : `<svg class="w-4 h-4 text-neutral-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
-    }
-
-    function getTimeText(r) {
-      return deliveryMode === "pickup" ? `約 ${r.pickup_time}可取餐` : r.delivery_time;
-    }
-
-    function compactRecommendedCardHTML(r) {
-      const user = getUser();
-      const isFav = user.favorites.includes(r.id);
-      return `
-        <article class="snap-start shrink-0 w-[78%] sm:w-[46%] lg:w-[calc(25%-12px)] bg-white rounded-2xl border border-neutral-200 overflow-hidden hover:shadow-md transition flex flex-col group">
-          <div class="relative aspect-[16/10] bg-neutral-100 overflow-hidden cursor-pointer" onclick="openMenuModal('${r.id}')">
-            <img src="${r.cover}" alt="${escapeHtml(r.name)}" onerror="handleImgError(this)" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-            <button type="button" data-fav-btn="${r.id}" onclick="event.stopPropagation(); toggleFavorite('${r.id}')" aria-label="${isFav ? '取消收藏' : '加入收藏'}"
-              class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow flex items-center justify-center transition">
-              ${heartSvg(isFav)}
-            </button>
-            <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded-full bg-white/95 text-[11px] font-extrabold text-neutral-900 shadow-sm">★ ${r.rating}</span>
-          </div>
-          <div class="p-3 flex-1 flex flex-col justify-between cursor-pointer" onclick="openMenuModal('${r.id}')">
-            <div>
-              <h3 class="font-extrabold text-sm text-neutral-950 truncate">${escapeHtml(r.name)}</h3>
-              <p class="text-[11px] text-neutral-500 mt-0.5 truncate">${escapeHtml(r.category)} · ${getTimeText(r)}</p>
-            </div>
-            <div class="mt-2 flex items-center justify-between text-[11px] font-bold">
-              <span class="text-emerald-700">${deliveryMode === 'pickup' || user.is_vip ? '免外送費' : `$${PRICING.DELIVERY_FEE} 外送費`}</span>
-              <span class="text-neutral-400">${r.distance}</span>
-            </div>
-          </div>
-        </article>
-      `;
-    }
-
-    function standardRestaurantCardHTML(r) {
-      const user = getUser();
-      const isFav = user.favorites.includes(r.id);
-      return `
-        <article class="bg-white rounded-2xl border border-neutral-200 overflow-hidden hover:shadow-lg transition flex flex-col group">
-          <div class="relative aspect-video bg-neutral-100 overflow-hidden cursor-pointer" onclick="openMenuModal('${r.id}')">
-            <img src="${r.cover}" alt="${escapeHtml(r.name)}" onerror="handleImgError(this)" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-            <button type="button" data-fav-btn="${r.id}" onclick="event.stopPropagation(); toggleFavorite('${r.id}')" aria-label="${isFav ? '取消收藏' : '加入收藏'}"
-              class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 hover:bg-white shadow flex items-center justify-center transition">
-              ${heartSvg(isFav)}
-            </button>
-            <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-neutral-950/80 text-white text-[11px] font-bold backdrop-blur-sm">${escapeHtml(r.category)}</span>
-          </div>
-          <div class="p-4 flex-1 flex flex-col justify-between cursor-pointer" onclick="openMenuModal('${r.id}')">
-            <div>
-              <div class="flex items-start justify-between gap-2">
-                <h3 class="font-extrabold text-base text-neutral-950 leading-snug">${escapeHtml(r.name)}</h3>
-                <span class="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full bg-neutral-100 text-xs font-extrabold text-neutral-900">★ ${r.rating}</span>
-              </div>
-              <p class="text-xs text-neutral-500 mt-1">${getTimeText(r)} · ${r.distance} · ${deliveryMode === 'pickup' || user.is_vip ? '<span class="text-emerald-700 font-bold">免外送費</span>' : `$${PRICING.DELIVERY_FEE} 外送費`}</p>
-              <div class="flex flex-wrap gap-1.5 mt-2.5">
-                ${r.tags.slice(0, 3).map(t => `<span class="px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[11px] font-semibold">${escapeHtml(t)}</span>`).join("")}
-              </div>
-            </div>
-          </div>
-        </article>
-      `;
-    }
-
-    function renderHome() {
-      const user = getUser();
-
-      // 分類按鈕
-      document.getElementById("restaurant-category-tabs").innerHTML = REST_CATEGORIES.map(c => `
-        <button type="button" onclick="selectedRestCategory='${c}'; renderHome()"
-          class="px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition ${selectedRestCategory === c ? 'bg-neutral-950 text-white shadow-sm' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}">
-          ${c}
-        </button>
-      `).join("");
-
-      // 智慧推薦橫排
-      const rec = analyzeUserPreferences(user);
-      document.getElementById("rec-reason").textContent = rec.reason;
-      const statsEntries = Object.entries(rec.taste_stats);
-      document.getElementById("taste-stats-pills").innerHTML = statsEntries.length
-        ? statsEntries.map(([k, v]) => `<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold">${escapeHtml(k)} ${v} 份</span>`).join("")
-        : `<span class="px-3 py-1 rounded-full bg-neutral-100 text-neutral-500 font-semibold">完成首筆訂單後顯示口味分析</span>`;
-
-      document.getElementById("recommended-carousel").innerHTML = rec.restaurants.map(compactRecommendedCardHTML).join("");
-
-      // 搜尋與分類過濾（含菜單名稱與描述）
-      const q = searchQuery.trim().toLowerCase();
-      const filtered = RESTAURANTS.filter(r => {
-        const matchCat = selectedRestCategory === "全部" || r.category === selectedRestCategory;
-        const matchQ = !q ||
-          r.name.toLowerCase().includes(q) ||
-          r.category.toLowerCase().includes(q) ||
-          r.tags.some(t => t.toLowerCase().includes(q)) ||
-          r.menu.some(m => m.name.toLowerCase().includes(q) || (m.desc || "").toLowerCase().includes(q));
-        return matchCat && matchQ;
-      });
-
-      document.getElementById("restaurants-count-label").textContent = `共 ${filtered.length} 家餐廳`;
-      document.getElementById("restaurants-grid").innerHTML = filtered.length
-        ? filtered.map(standardRestaurantCardHTML).join("")
-        : `<div class="col-span-full py-14 text-center bg-neutral-50 rounded-3xl border border-neutral-200 space-y-2">
-            <p class="font-bold text-neutral-700">找不到符合「${escapeHtml(q)}」的餐廳或餐點</p>
-            <button type="button" onclick="resetSearch()" class="px-4 py-2 rounded-full bg-neutral-950 text-white text-xs font-bold">清除搜尋條件</button>
-          </div>`;
-    }
-
-    function scrollRecommended(dir) {
-      const el = document.getElementById("recommended-carousel");
-      if (!el) return;
-      el.scrollBy({ left: dir * (el.clientWidth * 0.78), behavior: "smooth" });
+    function setDeliveryMode(mode) {
+      deliveryMode = mode;
+      renderActiveView();
     }
 
     function onSearchInput(val) {
-      searchQuery = val;
-      document.getElementById("desktop-search").value = val;
-      document.getElementById("mobile-search").value = val;
+      const desk = document.getElementById("desktop-search");
+      const mob = document.getElementById("mobile-search");
+      if (desk && desk.value !== val) desk.value = val;
+      if (mob && mob.value !== val) mob.value = val;
+
       clearTimeout(searchDebounceTimer);
       searchDebounceTimer = setTimeout(() => {
-        if (val.trim() && selectedRestCategory !== "全部") {
-          selectedRestCategory = "全部";
-        }
+        searchQuery = val.trim().toLowerCase();
         if (currentTab !== "home") {
-          currentTab = "home";
-          ["home", "favorites", "orders", "cart"].forEach(t => {
-            document.getElementById(`view-${t}`).classList.toggle("hidden", t !== "home");
-            const btn = document.getElementById(`tab-${t}`);
-            btn.classList.toggle("border-neutral-950", t === "home");
-            btn.classList.toggle("text-neutral-950", t === "home");
-            btn.classList.toggle("border-transparent", t !== "home");
-            btn.classList.toggle("text-neutral-500", t !== "home");
-          });
+          switchTab("home");
+        } else {
+          renderRestaurants();
         }
-        renderHome();
-      }, 180);
+      }, 150);
     }
 
-    function resetSearch() {
-      searchQuery = "";
-      selectedRestCategory = "全部";
-      document.getElementById("desktop-search").value = "";
-      document.getElementById("mobile-search").value = "";
+    // ==========================================
+    // 6. 首頁：智慧口味分析推薦與餐廳卡片渲染
+    // ==========================================
+    function analyzeTastePreferences(user) {
+      const counts = {};
+      (user.orders || []).forEach(ord => {
+        (ord.items || []).forEach(item => {
+          const cat = item.restaurant_category || "速食";
+          counts[cat] = (counts[cat] || 0) + (item.qty || 1);
+        });
+      });
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      return { counts, sorted, topCategory: sorted.length ? sorted[0][0] : null };
+    }
+
+    function selectRestCategory(cat) {
+      selectedRestCategory = cat;
       renderHome();
     }
 
-    function renderFavorites() {
-      const user = getUser();
-      if (!isLoggedIn()) {
-        document.getElementById("favorites-grid").innerHTML = `
-          <div class="col-span-full py-14 text-center bg-neutral-50 rounded-3xl border border-neutral-200 space-y-3">
-            <p class="font-extrabold text-neutral-800">登入後即可收藏您的愛店口袋名單</p>
-            <button type="button" onclick="openLoginModal()" class="px-5 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-bold">立即登入</button>
-          </div>`;
-        return;
-      }
-      const favs = RESTAURANTS.filter(r => user.favorites.includes(r.id));
-      document.getElementById("favorites-grid").innerHTML = favs.length
-        ? favs.map(standardRestaurantCardHTML).join("")
-        : `<div class="col-span-full py-14 text-center bg-neutral-50 rounded-3xl border border-neutral-200 space-y-2">
-            <p class="font-bold text-neutral-700">口袋名單目前是空的</p>
-            <p class="text-xs text-neutral-500">點擊餐廳封面右上角的愛心圖示即可加入收藏</p>
-          </div>`;
+    function renderHome() {
+      // 分類按鈕
+      const tabsEl = document.getElementById("restaurant-category-tabs");
+      tabsEl.innerHTML = REST_CATEGORIES.map(cat => {
+        const active = cat === selectedRestCategory;
+        return `<button type="button" onclick="selectRestCategory('${escapeHtml(cat)}')"
+          class="px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition ${active ? 'bg-neutral-950 text-white shadow-sm' : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'}">
+          ${escapeHtml(cat)}
+        </button>`;
+      }).join("");
+
+      renderRecommended();
+      renderRestaurants();
     }
 
-    function toggleFavorite(rid) {
-      if (!isLoggedIn()) {
-        showToast("請先登入以使用口袋名單功能");
-        openLoginModal();
-        return;
-      }
-      const user = getUser();
-      const idx = user.favorites.indexOf(rid);
-      const rest = RESTAURANTS.find(r => r.id === rid);
-      if (idx >= 0) {
-        user.favorites.splice(idx, 1);
-        saveUsers();
-        showToast(`已將「${rest ? rest.name : ''}」移出口袋名單`, "復原", () => {
-          if (!user.favorites.includes(rid)) {
-            user.favorites.push(rid);
-            saveUsers();
-            updateFavoriteButtonsDom(rid, true);
-            if (currentTab === "favorites") renderFavorites();
-          }
-        });
+    function renderRecommended() {
+      const u = getUser();
+      const { sorted, topCategory } = analyzeTastePreferences(u);
+      const reasonEl = document.getElementById("rec-reason");
+      const pillsEl = document.getElementById("taste-stats-pills");
+      const carouselEl = document.getElementById("recommended-carousel");
+
+      let recList = [];
+      if (topCategory) {
+        reasonEl.textContent = `根據您過往最常點購「${topCategory}」類餐點，優先為您精選同系列人氣門市`;
+        pillsEl.innerHTML = sorted.slice(0, 3).map(([cat, cnt]) =>
+          `<span class="px-2.5 py-1 rounded-full bg-neutral-100 text-neutral-700 font-bold">${escapeHtml(cat)} · ${cnt} 份</span>`
+        ).join("");
+        const primary = RESTAURANTS.filter(r => r.category === topCategory);
+        const others = RESTAURANTS.filter(r => r.category !== topCategory).sort((a, b) => b.rating - a.rating);
+        recList = [...primary, ...others].slice(0, 8);
       } else {
-        user.favorites.push(rid);
-        saveUsers();
-        showToast(`已收藏「${rest ? rest.name : ''}」至口袋名單`);
+        reasonEl.textContent = "精選高評價人氣名店，下單後將依據您的點餐紀錄自動客製化推薦";
+        pillsEl.innerHTML = `<span class="px-2.5 py-1 rounded-full bg-neutral-100 text-neutral-600 font-semibold">綜合高分精選</span>`;
+        recList = [...RESTAURANTS].sort((a, b) => b.rating - a.rating).slice(0, 8);
       }
 
-      if (currentTab === "favorites") {
-        renderFavorites();
-      } else {
-        updateFavoriteButtonsDom(rid, user.favorites.includes(rid));
-      }
-    }
-
-    function updateFavoriteButtonsDom(rid, isFav) {
-      document.querySelectorAll(`[data-fav-btn="${rid}"]`).forEach(btn => {
-        btn.innerHTML = heartSvg(isFav);
-        btn.setAttribute("aria-label", isFav ? "取消收藏" : "加入收藏");
-      });
-    }
-
-    function renderOrders() {
-      const user = getUser();
-      const container = document.getElementById("orders-list");
-      if (!isLoggedIn()) {
-        container.innerHTML = `
-          <div class="py-14 text-center bg-neutral-50 rounded-3xl border border-neutral-200 space-y-3">
-            <p class="font-extrabold text-neutral-800">登入後即可檢視歷史訂單與追蹤進度</p>
-            <button type="button" onclick="openLoginModal()" class="px-5 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-bold">立即登入</button>
-          </div>`;
-        return;
-      }
-      if (!user.orders.length) {
-        container.innerHTML = `<div class="py-14 text-center bg-neutral-50 rounded-3xl border border-neutral-200 text-neutral-500 text-sm">目前尚無歷史訂單紀錄。</div>`;
-        return;
-      }
-
-      container.innerHTML = user.orders.map(o => {
-        const steps = o.delivery_mode === "pickup" ? STATUS_STEPS_PICKUP : STATUS_STEPS_DELIVERY;
-        const isHighlighted = o.order_id === highlightedOrderId;
+      carouselEl.innerHTML = recList.map(r => {
+        const isFav = (u.favorites || []).includes(r.id);
+        const eta = deliveryMode === "pickup" ? r.pickup_time : r.delivery_time;
+        const feeText = (deliveryMode === "pickup" || u.is_vip) ? "$0 外送費" : `$${PRICING.DELIVERY_FEE} 外送費`;
         return `
-          <div class="bg-white rounded-3xl border ${isHighlighted ? 'border-brand ring-2 ring-brand' : 'border-neutral-200'} p-5 sm:p-6 space-y-4 transition">
-            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-neutral-100">
-              <div class="space-y-1">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="font-extrabold text-base text-neutral-950">${escapeHtml(o.order_id)}</span>
-                  <span class="text-xs text-neutral-400">${escapeHtml(o.created_at)}</span>
-                  <span class="px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-700 text-[11px] font-bold">${o.delivery_mode === 'pickup' ? '來店自取' : '外送'}</span>
-                  ${o.payment_label ? `<span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold">${escapeHtml(o.payment_label)}</span>` : ''}
-                  ${o.invoice_label ? `<span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">${escapeHtml(o.invoice_label)}</span>` : ''}
-                </div>
-                ${o.delivery_address ? `<p class="text-xs text-neutral-500">地址：${escapeHtml(o.delivery_address)}</p>` : ''}
+          <article onclick="openRestaurantModal('${r.id}')" class="snap-start shrink-0 w-[260px] sm:w-[296px] rounded-2xl border border-neutral-200 bg-white overflow-hidden hover:shadow-lg transition cursor-pointer group">
+            <div class="relative aspect-[16/10] bg-neutral-100 overflow-hidden">
+              <img src="${escapeHtml(r.cover)}" alt="${escapeHtml(r.name)}" onerror="handleImgError(this)" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+              <button type="button" onclick="toggleFavorite(event, '${r.id}')" aria-label="收藏餐廳"
+                class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow flex items-center justify-center text-sm transition">
+                ${isFav ? '❤️' : '🤍'}
+              </button>
+              <span class="absolute bottom-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/75 text-white text-[11px] font-bold">
+                ${escapeHtml(r.category)}
+              </span>
+            </div>
+            <div class="p-3.5 space-y-1.5">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="font-extrabold text-sm text-neutral-950 line-clamp-1">${escapeHtml(r.name)}</h3>
+                <span class="shrink-0 px-1.5 py-0.5 rounded-md bg-neutral-100 text-xs font-extrabold text-neutral-900">★ ${r.rating}</span>
               </div>
-              <div class="flex items-center gap-2">
-                ${o.status_index < 3 ? `<button type="button" onclick="advanceOrder('${o.order_id}')" class="px-3.5 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-bold">推進狀態</button>` : ''}
-                <button type="button" onclick="reorder('${o.order_id}')" class="px-4 py-1.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-bold">再次點購</button>
-              </div>
+              <p class="text-xs text-neutral-500">${escapeHtml(feeText)} · ${escapeHtml(eta)}</p>
             </div>
-
-            <!-- 狀態進度條 -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-              ${steps.map((st, idx) => `
-                <div class="py-2 px-2.5 rounded-xl font-bold ${idx <= o.status_index ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-neutral-50 text-neutral-400'}">
-                  ${idx <= o.status_index ? '✓ ' : ''}${st}
-                </div>
-              `).join("")}
-            </div>
-
-            <!-- 品項列表 -->
-            <div class="space-y-1.5 text-sm">
-              ${o.items.map(i => `
-                <div class="flex justify-between gap-2 text-neutral-700">
-                  <span>
-                    <strong class="text-neutral-950">[${escapeHtml(i.restaurant_name)}]</strong>
-                    ${escapeHtml(i.name)} × ${i.qty}
-                    <span class="text-xs text-neutral-400">(${escapeHtml(i.ice)}/${escapeHtml(i.sugar)}${i.addons && i.addons.length ? '/' + escapeHtml(i.addons.join('、')) : ''}${i.note ? '/備註:' + escapeHtml(i.note) : ''})</span>
-                  </span>
-                  <span class="font-bold shrink-0">$${i.unit_price * i.qty}</span>
-                </div>
-              `).join("")}
-            </div>
-
-            <div class="flex flex-wrap justify-between items-center pt-3 border-t border-neutral-100 text-xs text-neutral-500">
-              <span>小計 $${o.subtotal} · 外送費 $${o.delivery_fee} · 服務費 $${o.service_fee}${o.discount ? ` · 折扣 -$${o.discount}` : ''}</span>
-              <span class="text-base font-extrabold text-neutral-950">實付總額 $${o.total}</span>
-            </div>
-          </div>
+          </article>
         `;
       }).join("");
     }
 
-    function advanceOrder(orderId) {
-      const user = getUser();
-      const target = user.orders.find(o => o.order_id === orderId);
-      if (!target || target.status_index >= 3) return;
-      target.status_index += 1;
-      saveUsers();
-      renderOrders();
+    function scrollRecommended(direction) {
+      const el = document.getElementById("recommended-carousel");
+      if (el) el.scrollBy({ left: direction * 312, behavior: "smooth" });
     }
 
-    function toggleAutoAdvance(enabled) {
-      clearInterval(autoAdvanceTimer);
-      if (!enabled) return;
-      autoAdvanceTimer = setInterval(() => {
-        if (!isLoggedIn()) return;
-        const user = getUser();
-        let changed = false;
-        user.orders.forEach(o => {
-          if (o.status_index < 3) {
-            o.status_index += 1;
-            changed = true;
-          }
-        });
-        if (changed) {
-          saveUsers();
-          if (currentTab === "orders") renderOrders();
-        }
-      }, 10000);
-      showToast("已開啟每 10 秒自動推進訂單進度");
-    }
-
-    function reorder(orderId) {
-      const user = getUser();
-      const target = user.orders.find(o => o.order_id === orderId);
-      if (!target) return;
-
-      target.items.forEach(item => {
-        const specKey = `${item.restaurant_id}|${item.item_id}|${item.ice}|${item.sugar}|${(item.addons || []).join(",")}|${item.note || ""}`;
-        const existing = user.cart.find(c =>
-          `${c.restaurant_id}|${c.item_id}|${c.ice}|${c.sugar}|${(c.addons || []).join(",")}|${c.note || ""}` === specKey
-        );
-        if (existing) {
-          existing.qty += item.qty;
-        } else {
-          user.cart.push({ ...item, cart_item_id: "c_" + Math.random().toString(36).slice(2, 9) });
-        }
-      });
-
-      deliveryMode = target.delivery_mode;
-      saveUsers();
-      showToast("已將歷史訂單品項合併加入購物車");
-      switchTab("cart");
-    }
-
-    // ==========================================
-    // 7. 購物車、多元付款與載具渲染
-    // ==========================================
-    function renderCart() {
-      const user = getUser();
-      const cart = user.cart;
-      const sum = calculateCartSummary(user, deliveryMode, promoCode);
-      const isEmpty = cart.length === 0;
-
-      document.getElementById("clear-cart-btn").classList.toggle("hidden", isEmpty);
-
-      // 按餐廳分組
-      const groups = {};
-      cart.forEach(item => {
-        if (!groups[item.restaurant_id]) {
-          groups[item.restaurant_id] = { name: item.restaurant_name, items: [] };
-        }
-        groups[item.restaurant_id].items.push(item);
-      });
-      const groupKeys = Object.keys(groups);
-      document.getElementById("multi-store-warning").classList.toggle("hidden", groupKeys.length <= 1);
-
-      const listEl = document.getElementById("cart-items-list");
-      if (isEmpty) {
-        listEl.innerHTML = `
-          <div class="py-16 text-center bg-neutral-50 rounded-3xl border border-neutral-200 space-y-3">
-            <p class="font-extrabold text-neutral-800">購物車目前是空的</p>
-            <p class="text-xs text-neutral-500">去探索附近熱門餐廳，挑選您想吃的餐點吧！</p>
-            <button type="button" onclick="switchTab('home')" class="px-5 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-bold">探索餐廳</button>
-          </div>`;
-      } else {
-        listEl.innerHTML = groupKeys.map(rid => `
-          <div class="bg-white rounded-3xl border border-neutral-200 p-5 space-y-3">
-            <div class="flex items-center justify-between pb-2.5 border-b border-neutral-100">
-              <h4 class="font-extrabold text-sm text-neutral-950">${escapeHtml(groups[rid].name)}</h4>
-              <button type="button" onclick="openMenuModal('${rid}')" class="text-xs font-bold text-brandDark hover:underline">+ 加點其他餐點</button>
+    function buildRestaurantCardHtml(r, u) {
+      const isFav = (u.favorites || []).includes(r.id);
+      const eta = deliveryMode === "pickup" ? r.pickup_time : r.delivery_time;
+      const feeText = (deliveryMode === "pickup" || u.is_vip) ? "$0 外送費" : `$${PRICING.DELIVERY_FEE} 外送費`;
+      return `
+        <article onclick="openRestaurantModal('${r.id}')" class="rounded-2xl border border-neutral-200 bg-white overflow-hidden hover:shadow-lg transition cursor-pointer group flex flex-col">
+          <div class="relative aspect-video bg-neutral-100 overflow-hidden">
+            <img src="${escapeHtml(r.cover)}" alt="${escapeHtml(r.name)}" onerror="handleImgError(this)" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+            <button type="button" onclick="toggleFavorite(event, '${r.id}')" aria-label="收藏餐廳"
+              class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 hover:bg-white shadow flex items-center justify-center text-base transition">
+              ${isFav ? '❤️' : '🤍'}
+            </button>
+            <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+              <span class="px-2.5 py-1 rounded-full bg-black/75 text-white text-[11px] font-bold">${escapeHtml(r.category)}</span>
+              <span class="px-2.5 py-1 rounded-full bg-white/95 text-neutral-900 text-[11px] font-extrabold">${escapeHtml(eta)}</span>
             </div>
-            ${groups[rid].items.map(i => `
-              <div class="flex items-center justify-between gap-3 py-2">
-                <div class="min-w-0">
-                  <p class="font-bold text-sm text-neutral-950">${escapeHtml(i.name)}</p>
-                  <p class="text-xs text-neutral-500 mt-0.5">
-                    ${escapeHtml(i.ice)} / ${escapeHtml(i.sugar)}${i.addons && i.addons.length ? ' / ' + escapeHtml(i.addons.join('、')) : ''}${i.note ? ' / 備註：' + escapeHtml(i.note) : ''}
-                  </p>
-                  <p class="text-xs font-bold text-neutral-800 mt-1">$${i.unit_price * i.qty}</p>
-                </div>
-                <div class="flex items-center gap-2 shrink-0">
-                  <div class="flex items-center border border-neutral-200 rounded-full overflow-hidden text-xs">
-                    <button type="button" onclick="changeCartQty('${i.cart_item_id}', -1)" aria-label="減少數量" class="w-7 h-7 font-bold hover:bg-neutral-100">−</button>
-                    <span class="w-6 text-center font-extrabold">${i.qty}</span>
-                    <button type="button" onclick="changeCartQty('${i.cart_item_id}', 1)" aria-label="增加數量" class="w-7 h-7 font-bold hover:bg-neutral-100">+</button>
-                  </div>
-                </div>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between space-y-2.5">
+            <div class="space-y-1">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="font-extrabold text-base text-neutral-950 leading-snug">${escapeHtml(r.name)}</h3>
+                <span class="shrink-0 px-2 py-0.5 rounded-lg bg-neutral-100 text-xs font-extrabold text-neutral-900">★ ${r.rating} (${escapeHtml(r.reviews)})</span>
               </div>
-            `).join("")}
-          </div>
-        `).join("");
-      }
-
-      // 會員優惠橫幅
-      const banner = document.getElementById("vip-promo-banner");
-      if (isLoggedIn() && user.is_vip) {
-        banner.className = "p-3.5 rounded-2xl text-xs leading-relaxed bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold";
-        banner.textContent = "FoodOrder One 尊榮會員生效中：享免外送費、免服務費，並可套用 PRO85 / VIP50 折扣碼。";
-      } else {
-        banner.className = "p-3.5 rounded-2xl text-xs leading-relaxed bg-white border border-neutral-200 text-neutral-600";
-        banner.innerHTML = `目前為一般費率（外送費 $${PRICING.DELIVERY_FEE}、服務費 $${PRICING.SERVICE_FEE}）。<button type="button" onclick="openVipModal()" class="text-brandDark font-extrabold underline ml-1">升級 One 立即免運</button>`;
-      }
-
-      // 折扣碼輸入框狀態
-      const promoInput = document.getElementById("promo-input");
-      const promoApplyBtn = document.getElementById("promo-apply-btn");
-      promoInput.value = promoCode;
-      promoInput.disabled = isEmpty;
-      promoApplyBtn.disabled = isEmpty;
-
-      const pMsg = document.getElementById("promo-msg");
-      pMsg.textContent = sum.promo_msg || "";
-      pMsg.className = !sum.promo_msg
-        ? "text-xs min-h-[16px] text-neutral-400"
-        : (sum.promo_valid ? "text-xs min-h-[16px] text-emerald-700 font-bold" : "text-xs min-h-[16px] text-red-600 font-semibold");
-
-      // 付款方式
-      renderPaymentMethods(user);
-
-      // 發票載具 UI
-      renderInvoiceControls(user);
-
-      // 金額明細
-      document.getElementById("sum-mode-label").textContent = deliveryMode === "pickup" ? "來店自取" : "外送";
-      document.getElementById("sum-subtotal").textContent = `$${sum.subtotal}`;
-      document.getElementById("sum-delivery").textContent = sum.delivery_fee === 0 && !isEmpty ? "$0（免運費）" : `$${sum.delivery_fee}`;
-      document.getElementById("sum-service").textContent = `$${sum.service_fee}`;
-      document.getElementById("sum-discount").textContent = `-$${sum.discount}`;
-      document.getElementById("sum-total").textContent = `$${sum.total}`;
-
-      const checkoutBtn = document.getElementById("checkout-btn");
-      checkoutBtn.disabled = isEmpty;
-      checkoutBtn.textContent = deliveryMode === "pickup" ? "前往結帳並確認取餐門市" : "前往結帳並確認外送地址";
-    }
-
-    function renderPaymentMethods(user) {
-      const methods = [
-        { id: "cod", label: deliveryMode === "pickup" ? "現場現金付款" : "貨到付款（現金）", sub: "取餐時支付現金" },
-        { id: "card", label: "信用卡 / 金融卡", sub: "支援 Visa、Mastercard、JCB" },
-        { id: "linepay", label: "LINE Pay", sub: "快速跳轉 LINE Pay 付款" },
-        { id: "applepay", label: "Apple Pay", sub: "Face ID / Touch ID 一鍵支付" },
-        { id: "jkopay", label: "街口支付 JKOPay", sub: "享街口幣回饋折抵" }
-      ];
-
-      document.getElementById("payment-methods-list").innerHTML = methods.map(m => `
-        <label class="flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition ${selectedPaymentMethod === m.id ? 'border-neutral-950 bg-white shadow-sm' : 'border-neutral-200 bg-white/60 hover:bg-white'}">
-          <div class="flex items-center gap-2.5">
-            <input type="radio" name="payment_method" value="${m.id}" ${selectedPaymentMethod === m.id ? 'checked' : ''} onchange="selectedPaymentMethod='${m.id}'; renderCart()" class="accent-neutral-950 w-4 h-4" />
-            <div>
-              <p class="text-xs font-extrabold text-neutral-900">${m.label}</p>
-              <p class="text-[11px] text-neutral-500">${m.sub}</p>
+              <p class="text-xs text-neutral-500">${escapeHtml(feeText)} · 距離 ${escapeHtml(r.distance)} · 低消 $${r.min_order}</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${(r.tags || []).map(tag => `<span class="px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600 text-[11px] font-semibold">${escapeHtml(tag)}</span>`).join("")}
             </div>
           </div>
+        </article>
+      `;
+    }
+
+    function renderRestaurants() {
+      const u = getUser();
+      const grid = document.getElementById("restaurants-grid");
+      const countLabel = document.getElementById("restaurants-count-label");
+
+      const filtered = RESTAURANTS.filter(r => {
+        const matchCat = selectedRestCategory === "全部" || r.category === selectedRestCategory;
+        if (!matchCat) return false;
+        if (!searchQuery) return true;
+        const inRest = r.name.toLowerCase().includes(searchQuery) ||
+          r.category.toLowerCase().includes(searchQuery) ||
+          (r.tags || []).some(t => t.toLowerCase().includes(searchQuery));
+        const inMenu = (r.menu || []).some(m =>
+          m.name.toLowerCase().includes(searchQuery) || m.desc.toLowerCase().includes(searchQuery)
+        );
+        return inRest || inMenu;
+      });
+
+      countLabel.textContent = `共 ${filtered.length} 間合作餐廳`;
+      if (!filtered.length) {
+        grid.innerHTML = `
+          <div class="col-span-full py-14 text-center space-y-2 bg-neutral-50 rounded-3xl border border-neutral-200">
+            <p class="text-base font-extrabold text-neutral-800">找不到符合「${escapeHtml(searchQuery)}」的餐廳或餐點</p>
+            <p class="text-xs text-neutral-500">試試搜尋「麥當勞」、「披薩」、「珍珠」或切換為「全部」分類</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(r => buildRestaurantCardHtml(r, u)).join("");
+    }
+
+    // ==========================================
+    // 7. 口袋名單
+    // ==========================================
+    function toggleFavorite(event, restId) {
+      if (event) event.stopPropagation();
+      if (!isLoggedIn()) {
+        showToast("請先登入會員即可收藏口袋名單", "前往登入", openLoginModal);
+        return;
+      }
+      const u = getUser();
+      const idx = u.favorites.indexOf(restId);
+      if (idx >= 0) {
+        u.favorites.splice(idx, 1);
+        showToast("已從口袋名單移除");
+      } else {
+        u.favorites.push(restId);
+        showToast("已加入您的口袋名單 ❤️");
+      }
+      saveUsers();
+      renderActiveView();
+    }
+
+    function renderFavorites() {
+      const u = getUser();
+      const grid = document.getElementById("favorites-grid");
+      if (!isLoggedIn()) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-neutral-50 rounded-3xl border border-neutral-200">
+            <p class="text-base font-extrabold text-neutral-900">登入後即可檢視與管理您的口袋名單</p>
+            <button type="button" onclick="openLoginModal()" class="px-6 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-extrabold">立即登入</button>
+          </div>`;
+        return;
+      }
+
+      const favRests = RESTAURANTS.filter(r => (u.favorites || []).includes(r.id));
+      if (!favRests.length) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 bg-neutral-50 rounded-3xl border border-neutral-200">
+            <p class="text-base font-extrabold text-neutral-900">您的口袋名單目前還是空的</p>
+            <p class="text-xs text-neutral-500">點擊餐廳卡片右上角的愛心，就能把愛店收藏在這裡！</p>
+            <button type="button" onclick="switchTab('home')" class="px-6 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-extrabold">去逛逛餐廳</button>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = favRests.map(r => buildRestaurantCardHtml(r, u)).join("");
+    }
+
+    // ==========================================
+    // 8. 餐廳菜單與餐點客製化 Modal
+    // ==========================================
+    function openRestaurantModal(restId) {
+      const rest = RESTAURANTS.find(r => r.id === restId);
+      if (!rest) return;
+      activeRestaurant = rest;
+      selectedMealCategory = "全部";
+
+      const coverEl = document.getElementById("modal-rest-cover");
+      coverEl.dataset.fallbackApplied = "";
+      coverEl.onerror = () => handleImgError(coverEl);
+      coverEl.src = rest.cover;
+
+      document.getElementById("modal-rest-name").textContent = rest.name;
+      const eta = deliveryMode === "pickup" ? rest.pickup_time : rest.delivery_time;
+      document.getElementById("modal-rest-meta").textContent = `★ ${rest.rating} (${rest.reviews}) · ${rest.category} · 預估 ${eta} · 營業時間 ${rest.hours}`;
+      document.getElementById("modal-rest-address").textContent = rest.address;
+      document.getElementById("modal-rest-notice").textContent = `門市公告：${rest.notice}`;
+
+      const encodedAddr = encodeURIComponent(rest.address);
+      document.getElementById("modal-rest-nav-link").href = `https://www.google.com/maps/search/?api=1&query=${encodedAddr}`;
+      document.getElementById("modal-rest-map-wrap").classList.add("hidden");
+      document.getElementById("toggle-rest-map-btn").textContent = "查看 Google 地圖";
+      document.getElementById("modal-rest-map-iframe").src = `https://maps.google.com/maps?q=${encodedAddr}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+
+      renderMenuModalContent();
+      openModalById("menu-modal");
+    }
+
+    function closeMenuModal() {
+      closeModalById("menu-modal");
+    }
+
+    function toggleRestaurantMap() {
+      const wrap = document.getElementById("modal-rest-map-wrap");
+      const btn = document.getElementById("toggle-rest-map-btn");
+      const willShow = wrap.classList.contains("hidden");
+      wrap.classList.toggle("hidden", !willShow);
+      btn.textContent = willShow ? "收起 Google 地圖" : "查看 Google 地圖";
+    }
+
+    function selectMealCategory(cat) {
+      selectedMealCategory = cat;
+      renderMenuModalContent();
+    }
+
+    function renderMenuModalContent() {
+      if (!activeRestaurant) return;
+      const cats = activeRestaurant.custom_categories || MEAL_CATEGORIES;
+      const tabsEl = document.getElementById("meal-category-tabs");
+      tabsEl.innerHTML = cats.map(cat => {
+        const active = cat === selectedMealCategory;
+        return `<button type="button" onclick="selectMealCategory('${escapeHtml(cat)}')"
+          class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition ${active ? 'bg-neutral-950 text-white' : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'}">
+          ${escapeHtml(cat)}
+        </button>`;
+      }).join("");
+
+      const items = (activeRestaurant.menu || []).filter(m =>
+        selectedMealCategory === "全部" || m.category === selectedMealCategory
+      );
+
+      const listEl = document.getElementById("modal-menu-list");
+      listEl.innerHTML = items.map(item => `
+        <div onclick="openCustomModal('${activeRestaurant.id}', '${item.id}')"
+          class="p-3.5 rounded-2xl border border-neutral-200 hover:border-neutral-900 bg-white flex items-center justify-between gap-3 cursor-pointer transition group">
+          <div class="flex-1 min-w-0 space-y-1">
+            <span class="inline-block px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600 text-[10px] font-bold">${escapeHtml(item.category)}</span>
+            <h4 class="font-extrabold text-sm text-neutral-950 group-hover:text-brandDark transition">${escapeHtml(item.name)}</h4>
+            <p class="text-xs text-neutral-500 line-clamp-2 leading-relaxed">${escapeHtml(item.desc)}</p>
+            <p class="text-sm font-extrabold text-neutral-900 pt-0.5">$${item.price}</p>
+          </div>
+          <div class="relative w-24 h-24 rounded-xl bg-neutral-100 overflow-hidden shrink-0">
+            <img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" onerror="handleImgError(this)" class="w-full h-full object-cover" />
+            <span class="absolute bottom-1.5 right-1.5 w-7 h-7 rounded-full bg-white shadow text-neutral-950 font-black flex items-center justify-center text-base group-hover:bg-brand transition">+</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openCustomModal(restId, itemId) {
+      const rest = RESTAURANTS.find(r => r.id === restId);
+      if (!rest) return;
+      const item = (rest.menu || []).find(m => m.id === itemId);
+      if (!item) return;
+
+      activeRestaurant = rest;
+      activeMenuItem = item;
+      customQty = 1;
+
+      const imgEl = document.getElementById("custom-item-img");
+      imgEl.dataset.fallbackApplied = "";
+      imgEl.onerror = () => handleImgError(imgEl);
+      imgEl.src = item.img;
+
+      document.getElementById("custom-item-name").textContent = item.name;
+      document.getElementById("custom-item-desc").textContent = item.desc;
+      document.getElementById("custom-item-price").textContent = `單價 $${item.price}`;
+      document.getElementById("custom-note").value = "";
+      document.getElementById("custom-qty-display").textContent = "1";
+
+      // 智慧判斷是否為飲品類別
+      const isDrink = typeof item.is_drink === "boolean"
+        ? item.is_drink
+        : (item.category === "飲料" || rest.category === "手搖飲");
+      const iceSel = document.getElementById("custom-ice");
+      const sugarSel = document.getElementById("custom-sugar");
+      const hintEl = document.getElementById("custom-drink-hint");
+
+      if (isDrink) {
+        iceSel.disabled = false;
+        sugarSel.disabled = false;
+        iceSel.value = "微冰";
+        sugarSel.value = "微糖";
+        hintEl.classList.add("hidden");
+      } else {
+        iceSel.value = "熱飲／不適用";
+        sugarSel.value = "無糖／不適用";
+        iceSel.disabled = true;
+        sugarSel.disabled = true;
+        hintEl.classList.remove("hidden");
+      }
+
+      // 渲染加料與配餐升級選項
+      const addonsMap = rest.custom_addons || CATEGORY_ADDONS[rest.category] || {};
+      const addonsEl = document.getElementById("custom-addons");
+      addonsEl.innerHTML = Object.entries(addonsMap).map(([label, price]) => `
+        <label class="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200 hover:bg-neutral-50 cursor-pointer">
+          <span class="flex items-center gap-2 font-semibold text-neutral-800">
+            <input type="checkbox" value="${escapeHtml(label)}" data-price="${price}" onchange="updateCustomTotal()" class="accent-neutral-950 w-4 h-4 rounded" />
+            <span>${escapeHtml(label)}</span>
+          </span>
+          <span class="font-bold text-neutral-600">${price > 0 ? `+$${price}` : "免費"}</span>
         </label>
       `).join("");
 
-      const cardPanel = document.getElementById("credit-card-panel");
-      cardPanel.classList.toggle("hidden", selectedPaymentMethod !== "card");
-      if (selectedPaymentMethod === "card") {
-        const cards = user.saved_cards && user.saved_cards.length ? user.saved_cards : DEFAULT_SAVED_CARDS;
-        if (!cards.some(c => c.id === selectedCardId)) selectedCardId = cards[0].id;
-        document.getElementById("saved-cards-list").innerHTML = cards.map(c => `
-          <label class="flex items-center justify-between p-2.5 rounded-xl border cursor-pointer text-xs ${selectedCardId === c.id ? 'border-neutral-950 bg-neutral-50' : 'border-neutral-200'}">
-            <div class="flex items-center gap-2">
-              <input type="radio" name="saved_card" value="${c.id}" ${selectedCardId === c.id ? 'checked' : ''} onchange="selectedCardId='${c.id}'" class="accent-neutral-950" />
-              <span class="font-extrabold">${escapeHtml(c.brand)}</span>
-              <span class="font-mono text-neutral-600">•••• ${escapeHtml(c.last4)}</span>
-            </div>
-            <span class="text-[11px] text-neutral-400">${escapeHtml(c.expiry)}</span>
-          </label>
-        `).join("");
+      updateCustomTotal();
+      openModalById("custom-modal");
+    }
+
+    function closeCustomModal() {
+      closeModalById("custom-modal");
+    }
+
+    function adjustCustomQty(delta) {
+      customQty = Math.max(1, Math.min(20, customQty + delta));
+      document.getElementById("custom-qty-display").textContent = String(customQty);
+      updateCustomTotal();
+    }
+
+    function updateCustomTotal() {
+      if (!activeMenuItem) return;
+      const checked = Array.from(document.querySelectorAll("#custom-addons input:checked"));
+      const addonSum = checked.reduce((acc, el) => acc + Number(el.dataset.price || 0), 0);
+      const total = (activeMenuItem.price + addonSum) * customQty;
+      document.getElementById("custom-total-btn").textContent = `$${total}`;
+    }
+
+    function confirmAddToCart() {
+      if (!activeRestaurant || !activeMenuItem) return;
+      const checked = Array.from(document.querySelectorAll("#custom-addons input:checked"));
+      const addons = checked.map(el => el.value);
+      const addonSum = checked.reduce((acc, el) => acc + Number(el.dataset.price || 0), 0);
+      const unitPrice = activeMenuItem.price + addonSum;
+      const ice = document.getElementById("custom-ice").value;
+      const sugar = document.getElementById("custom-sugar").value;
+      const note = document.getElementById("custom-note").value.trim();
+
+      const cartItem = {
+        restaurant_id: activeRestaurant.id,
+        restaurant_name: activeRestaurant.name,
+        restaurant_category: activeRestaurant.category,
+        item_id: activeMenuItem.id,
+        name: activeMenuItem.name,
+        category: activeMenuItem.category,
+        base_price: activeMenuItem.price,
+        unit_price: unitPrice,
+        qty: customQty,
+        ice,
+        sugar,
+        addons,
+        note
+      };
+
+      const targetCart = isLoggedIn() ? getUser().cart : GUEST_CART;
+      // 檢查是否有完全相同客製化規格的品項，若有則直接累加數量
+      const existing = targetCart.find(c =>
+        c.item_id === cartItem.item_id &&
+        c.ice === cartItem.ice &&
+        c.sugar === cartItem.sugar &&
+        c.note === cartItem.note &&
+        JSON.stringify(c.addons) === JSON.stringify(cartItem.addons)
+      );
+      if (existing) {
+        existing.qty += cartItem.qty;
+      } else {
+        targetCart.push(cartItem);
       }
+
+      if (isLoggedIn()) saveUsers();
+      closeCustomModal();
+      renderHeader();
+      showToast(`已將「${cartItem.name}」加入購物車`, "前往結帳", () => {
+        closeMenuModal();
+        switchTab("cart");
+      });
+    }
+
+    // ==========================================
+    // 9. 購物車、付款方式、發票載具、地址確認與結帳
+    // ==========================================
+    function calculateCartTotals() {
+      const u = getUser();
+      const items = u.cart || [];
+      const subtotal = items.reduce((acc, item) => acc + item.unit_price * item.qty, 0);
+
+      if (!items.length) {
+        return { subtotal: 0, deliveryFee: 0, serviceFee: 0, discount: 0, total: 0 };
+      }
+
+      const deliveryFee = (deliveryMode === "pickup" || u.is_vip) ? 0 : PRICING.DELIVERY_FEE;
+      const serviceFee = u.is_vip ? 0 : PRICING.SERVICE_FEE;
+
+      let discount = 0;
+      const code = promoCode.trim().toUpperCase();
+      if (u.is_vip && code && PRICING.VIP_PROMO_CODES[code]) {
+        const rule = PRICING.VIP_PROMO_CODES[code];
+        if (rule.type === "percent") {
+          discount = Math.round(subtotal * rule.value);
+        } else if (rule.type === "fixed") {
+          discount = Math.min(subtotal, rule.value);
+        }
+      }
+
+      const total = Math.max(0, subtotal + deliveryFee + serviceFee - discount);
+      return { subtotal, deliveryFee, serviceFee, discount, total };
+    }
+
+    function updateCartQty(idx, delta) {
+      const u = getUser();
+      if (!u.cart[idx]) return;
+      u.cart[idx].qty += delta;
+      if (u.cart[idx].qty <= 0) {
+        u.cart.splice(idx, 1);
+      }
+      if (isLoggedIn()) saveUsers();
+      renderActiveView();
+    }
+
+    function removeCartItem(idx) {
+      const u = getUser();
+      u.cart.splice(idx, 1);
+      if (isLoggedIn()) saveUsers();
+      renderActiveView();
+      showToast("已移除該項餐點");
+    }
+
+    function clearCart() {
+      const u = getUser();
+      u.cart.length = 0;
+      promoCode = "";
+      if (isLoggedIn()) saveUsers();
+      renderActiveView();
+      showToast("購物車已清空");
+    }
+
+    function onPromoInput(val) {
+      promoCode = val.trim().toUpperCase();
+    }
+
+    function applyPromo() {
+      const u = getUser();
+      const inputEl = document.getElementById("promo-input");
+      const msgEl = document.getElementById("promo-msg");
+      const code = inputEl.value.trim().toUpperCase();
+      promoCode = code;
+
+      if (!u.is_vip) {
+        msgEl.textContent = "折扣碼 PRO85 / VIP50 僅限 FoodOrder One 會員使用";
+        msgEl.className = "text-xs min-h-[16px] text-amber-600 font-semibold";
+        renderCart();
+        return;
+      }
+
+      if (!code) {
+        msgEl.textContent = "請輸入折扣碼（PRO85 或 VIP50）";
+        msgEl.className = "text-xs min-h-[16px] text-neutral-500";
+        renderCart();
+        return;
+      }
+
+      const rule = PRICING.VIP_PROMO_CODES[code];
+      if (!rule) {
+        msgEl.textContent = "無效的折扣碼，請輸入 PRO85（85折）或 VIP50（現折$50）";
+        msgEl.className = "text-xs min-h-[16px] text-red-600 font-semibold";
+        promoCode = "";
+        renderCart();
+        return;
+      }
+
+      msgEl.textContent = `已套用：${rule.label}！`;
+      msgEl.className = "text-xs min-h-[16px] text-emerald-700 font-bold";
+      renderCart();
+    }
+
+    // 付款方式與信用卡邏輯
+    function selectPaymentMethod(methodId) {
+      selectedPaymentMethod = methodId;
+      renderCartPaymentAndInvoice();
+    }
+
+    function selectSavedCard(cardId) {
+      selectedCardId = cardId;
+      renderCartPaymentAndInvoice();
     }
 
     function toggleNewCardForm() {
       document.getElementById("new-card-form").classList.toggle("hidden");
     }
 
-    function detectCardBrand(num) {
-      const clean = num.replace(/\D/g, "");
-      if (clean.startsWith("4")) return "VISA";
-      if (/^(5[1-5]|2[2-7])/.test(clean)) return "Mastercard";
-      if (/^35/.test(clean)) return "JCB";
-      return clean.length ? "信用卡" : "";
+    function detectCardBrand(digits) {
+      if (/^4/.test(digits)) return "VISA";
+      if (/^(5[1-5]|2[2-7])/.test(digits)) return "Mastercard";
+      if (/^35/.test(digits)) return "JCB";
+      return "";
     }
 
     function formatCardNumberInput(el) {
@@ -2012,410 +2086,302 @@
       const rawNum = document.getElementById("new-card-number").value.replace(/\D/g, "");
       const expiry = document.getElementById("new-card-expiry").value.trim();
       const cvv = document.getElementById("new-card-cvv").value.trim();
-      if (rawNum.length < 15) return showToast("請輸入正確的 15–16 碼信用卡號");
-      if (!/^\d{2}\/\d{2}$/.test(expiry)) return showToast("請輸入正確的有效期限（MM/YY）");
+      if (rawNum.length < 15) return showToast("請輸入 15–16 碼信用卡號");
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) return showToast("請輸入有效期限（MM/YY）");
       if (cvv.length < 3) return showToast("請輸入 3–4 碼安全碼 CVV");
 
+      const u = getUser();
       const newCard = {
         id: "card_" + Date.now(),
         brand: detectCardBrand(rawNum) || "VISA",
         last4: rawNum.slice(-4),
         expiry
       };
-      if (isLoggedIn()) {
-        const u = getUser();
-        u.saved_cards = u.saved_cards || [...DEFAULT_SAVED_CARDS];
-        u.saved_cards.unshift(newCard);
-        saveUsers();
-      } else {
-        DEFAULT_SAVED_CARDS.unshift(newCard);
-      }
+      u.saved_cards.unshift(newCard);
       selectedCardId = newCard.id;
+      if (isLoggedIn()) saveUsers();
+
       document.getElementById("new-card-number").value = "";
       document.getElementById("new-card-expiry").value = "";
       document.getElementById("new-card-cvv").value = "";
+      document.getElementById("new-card-holder").value = "";
       document.getElementById("new-card-form").classList.add("hidden");
-      showToast(`已新增 ${newCard.brand} •••• ${newCard.last4}`);
-      renderCart();
+      renderCartPaymentAndInvoice();
+      showToast(`已新增並選用 ${newCard.brand} •••• ${newCard.last4}`);
     }
 
-    // 發票載具控制
-    function setInvoiceType(type) {
-      invoiceType = type;
-      renderInvoiceControls(getUser());
-    }
-
-    function renderInvoiceControls(user) {
-      ["carrier", "member", "donate", "company"].forEach(t => {
-        const btn = document.getElementById(`inv-btn-${t}`);
-        btn.className = invoiceType === t
-          ? "py-2 px-2.5 rounded-xl border border-neutral-950 bg-neutral-950 text-white text-center transition"
-          : "py-2 px-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400 text-center transition";
-      });
-      document.getElementById("inv-panel-carrier").classList.toggle("hidden", invoiceType !== "carrier");
-      document.getElementById("inv-panel-donate").classList.toggle("hidden", invoiceType !== "donate");
-      document.getElementById("inv-panel-company").classList.toggle("hidden", invoiceType !== "company");
-
-      const carrierInput = document.getElementById("checkout-carrier-input");
-      if (!carrierInput.value && user.carrier_code) {
-        carrierInput.value = user.carrier_code;
-      }
-    }
-
-    function onCarrierInput(el) {
-      let v = el.value.toUpperCase().replace(/[^0-9A-Z./+-]/g, "");
-      if (v && !v.startsWith("/")) v = "/" + v;
-      el.value = v.slice(0, 8);
-    }
-
+    // 電子發票與載具邏輯
     function isValidCarrier(code) {
       return /^\/[0-9A-Z.+-]{7}$/.test(code);
     }
 
-    function bindCarrierFromCheckout() {
-      if (!isLoggedIn()) {
-        showToast("請先登入再綁定手機條碼載具");
-        openLoginModal();
-        return;
-      }
-      const code = document.getElementById("checkout-carrier-input").value.trim().toUpperCase();
-      if (!isValidCarrier(code)) return showToast("載具格式錯誤，須為 / 開頭共 8 碼（例如 /AB12345）");
-      const u = getUser();
-      u.carrier_code = code;
-      saveUsers();
-      syncUserToBackend(u);
-      showToast(`已綁定手機條碼載具 ${code}`);
+    function onCarrierInput(el) {
+      let val = el.value.toUpperCase().replace(/\s/g, "");
+      if (val && !val.startsWith("/")) val = "/" + val;
+      el.value = val.slice(0, 8);
+    }
+
+    function setInvoiceType(type) {
+      invoiceType = type;
+      renderCartPaymentAndInvoice();
     }
 
     function setDonateCode(code) {
       document.getElementById("checkout-donate-input").value = code;
     }
 
-    function onPromoInput(val) {
-      promoCode = val.trim().toUpperCase();
-      renderCart();
-    }
-
-    function applyPromo() {
-      const val = document.getElementById("promo-input").value.trim().toUpperCase();
-      if (!val) return showToast("請先輸入優惠碼");
-      promoCode = val;
-      renderCart();
-    }
-
-    function changeCartQty(cid, delta) {
-      const user = getUser();
-      const idx = user.cart.findIndex(c => c.cart_item_id === cid);
-      if (idx < 0) return;
-      user.cart[idx].qty += delta;
-      if (user.cart[idx].qty <= 0) user.cart.splice(idx, 1);
-      if (isLoggedIn()) saveUsers();
-      renderHeader();
-      renderCart();
-    }
-
-    function clearCart() {
-      const user = getUser();
-      user.cart.length = 0;
-      if (isLoggedIn()) saveUsers();
-      renderHeader();
-      renderCart();
-      showToast("已清空購物車");
-    }
-
-    function setDeliveryMode(mode) {
-      deliveryMode = mode;
-      renderActiveView();
-    }
-
-    // ==========================================
-    // 8. 餐廳菜單 Modal & 餐點客製化 Modal
-    // ==========================================
-    function openMenuModal(rid) {
-      activeRestaurant = RESTAURANTS.find(r => r.id === rid);
-      if (!activeRestaurant) return;
-      selectedMealCategory = "全部";
-      document.getElementById("modal-rest-map-wrap").classList.add("hidden");
-      document.getElementById("toggle-rest-map-btn").textContent = "查看 Google 地圖";
-      renderMenuModal(false);
-      openModalById("menu-modal");
-    }
-
-    function closeMenuModal() {
-      activeRestaurant = null;
-      closeModalById("menu-modal");
-    }
-
-    function renderMenuModal(preserveScroll = false) {
-      const r = activeRestaurant;
-      if (!r) return;
-      const listEl = document.getElementById("modal-menu-list");
-      const prevScroll = preserveScroll ? listEl.scrollTop : 0;
-
-      const coverEl = document.getElementById("modal-rest-cover");
-      delete coverEl.dataset.fallbackApplied;
-      coverEl.onerror = () => handleImgError(coverEl);
-      coverEl.src = r.cover;
-
-      document.getElementById("modal-rest-name").textContent = r.name;
-      document.getElementById("modal-rest-meta").textContent = `${r.category} · ★ ${r.rating} (${r.reviews}) · ${getTimeText(r)} · 低消 $${r.min_order} · 營業 ${r.hours}`;
-      document.getElementById("modal-rest-address").textContent = r.address;
-      document.getElementById("modal-rest-notice").textContent = r.notice || "";
-      document.getElementById("modal-rest-nav-link").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.address)}`;
-
-      const categoriesToRender = r.custom_categories || MEAL_CATEGORIES;
-      document.getElementById("meal-category-tabs").innerHTML = categoriesToRender.map(c => `
-        <button type="button" onclick="selectedMealCategory='${c}'; renderMenuModal(true)"
-          class="px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer shrink-0 ${selectedMealCategory === c ? 'bg-neutral-950 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}">
-          ${escapeHtml(c)}
-        </button>
-      `).join("");
-
-      const items = r.menu.filter(m => selectedMealCategory === "全部" || m.category === selectedMealCategory);
-      listEl.innerHTML = items.length
-        ? items.map(m => `
-          <div onclick="openCustomModal('${m.id}')" class="p-3.5 rounded-2xl border border-neutral-200 hover:border-neutral-900 transition cursor-pointer flex items-center justify-between gap-3 bg-white">
-            <div class="min-w-0 flex-1 space-y-1">
-              <div class="flex items-center gap-1.5">
-                <h4 class="font-extrabold text-sm text-neutral-950 truncate">${escapeHtml(m.name)}</h4>
-              </div>
-              <p class="text-xs text-neutral-500 line-clamp-2">${escapeHtml(m.desc)}</p>
-              <div class="flex items-center gap-2 pt-1">
-                <span class="text-sm font-extrabold text-neutral-950">$${m.price}</span>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-neutral-100 text-neutral-600">${escapeHtml(m.category)}</span>
-              </div>
-            </div>
-            <div class="relative w-24 h-24 rounded-xl overflow-hidden bg-neutral-100 shrink-0">
-              <img src="${m.img}" alt="${escapeHtml(m.name)}" onerror="handleImgError(this)" class="w-full h-full object-cover" />
-              <span class="absolute bottom-1.5 right-1.5 w-7 h-7 rounded-full bg-white text-neutral-950 shadow font-black text-base flex items-center justify-center">+</span>
-            </div>
-          </div>
-        `).join("")
-        : `<p class="col-span-full text-center text-neutral-400 py-10 text-sm">此分類目前無品項。</p>`;
-
-      listEl.scrollTop = prevScroll;
-    }
-
-    function toggleRestaurantMap() {
-      if (!activeRestaurant) return;
-      const wrap = document.getElementById("modal-rest-map-wrap");
-      const btn = document.getElementById("toggle-rest-map-btn");
-      const iframe = document.getElementById("modal-rest-map-iframe");
-      const opening = wrap.classList.contains("hidden");
-      wrap.classList.toggle("hidden", !opening);
-      btn.textContent = opening ? "收合地圖" : "查看 Google 地圖";
-      if (opening) {
-        iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(activeRestaurant.address)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+    function bindCarrierFromCheckout() {
+      const code = document.getElementById("checkout-carrier-input").value.trim().toUpperCase();
+      if (!isValidCarrier(code)) {
+        return showToast("載具格式錯誤，須為 / 開頭共 8 碼（例如 /AB12345）");
       }
-    }
-
-    function openCustomModal(mid) {
-      if (!activeRestaurant) return;
-      const item = activeRestaurant.menu.find(m => m.id === mid);
-      if (!item) return;
-      activeMenuItem = item;
-      customQty = 1;
-
-      const imgEl = document.getElementById("custom-item-img");
-      delete imgEl.dataset.fallbackApplied;
-      imgEl.onerror = () => handleImgError(imgEl);
-      imgEl.src = item.img;
-
-      document.getElementById("custom-item-name").textContent = item.name;
-      document.getElementById("custom-item-desc").textContent = item.desc;
-      document.getElementById("custom-item-price").textContent = `$${item.price}`;
-      document.getElementById("custom-note").value = "";
-      document.getElementById("custom-qty-display").textContent = "1";
-
-      // 非飲料自動禁用冰塊與甜度（支援品項自訂 is_drink 屬性）
-      const isDrink = typeof item.is_drink === "boolean"
-        ? item.is_drink
-        : (item.category === "飲料" || activeRestaurant.category === "手搖飲");
-      const iceSel = document.getElementById("custom-ice");
-      const sugarSel = document.getElementById("custom-sugar");
-      const drinkHint = document.getElementById("custom-drink-hint");
-      if (isDrink) {
-        iceSel.disabled = false;
-        sugarSel.disabled = false;
-        iceSel.value = "少冰";
-        sugarSel.value = "微糖";
-        drinkHint.classList.add("hidden");
-      } else {
-        iceSel.value = "熱飲／不適用";
-        sugarSel.value = "無糖／不適用";
-        iceSel.disabled = true;
-        sugarSel.disabled = true;
-        drinkHint.classList.remove("hidden");
+      if (isLoggedIn()) {
+        const u = getUser();
+        u.carrier_code = code;
+        saveUsers();
+        syncUserToBackend(u);
       }
-
-      // 依餐廳專屬配料或餐廳分類渲染加料選項
-      const addonsMap = activeRestaurant.custom_addons || CATEGORY_ADDONS[activeRestaurant.category] || CATEGORY_ADDONS["速食"];
-      document.getElementById("custom-addons").innerHTML = Object.entries(addonsMap).map(([name, price]) => `
-        <label class="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200 hover:bg-neutral-50 cursor-pointer">
-          <span class="flex items-center gap-2 font-semibold text-neutral-800">
-            <input type="checkbox" value="${escapeHtml(name)}" data-price="${price}" onchange="updateCustomTotalBtn()" class="addon-cb accent-neutral-950 w-4 h-4" />
-            <span>${escapeHtml(name)}</span>
-          </span>
-          <span class="font-bold text-neutral-500">+$${price}</span>
-        </label>
-      `).join("");
-
-      updateCustomTotalBtn();
-      openModalById("custom-modal");
+      showToast(`已設定手機條碼載具 ${code}`);
     }
 
-    function closeCustomModal() {
-      activeMenuItem = null;
-      closeModalById("custom-modal");
-    }
-
-    function adjustCustomQty(delta) {
-      customQty = Math.max(1, customQty + delta);
-      document.getElementById("custom-qty-display").textContent = String(customQty);
-      updateCustomTotalBtn();
-    }
-
-    function updateCustomTotalBtn() {
-      if (!activeMenuItem) return;
-      let addonSum = 0;
-      document.querySelectorAll(".addon-cb:checked").forEach(cb => {
-        addonSum += Number(cb.dataset.price || 0);
-      });
-      const total = (activeMenuItem.price + addonSum) * customQty;
-      document.getElementById("custom-total-btn").textContent = `$${total}`;
-    }
-
-    function confirmAddToCart() {
-      if (!activeRestaurant || !activeMenuItem) return;
-      const addons = [];
-      let addonSum = 0;
-      document.querySelectorAll(".addon-cb:checked").forEach(cb => {
-        addons.push(cb.value);
-        addonSum += Number(cb.dataset.price || 0);
-      });
-
-      const ice = document.getElementById("custom-ice").value;
-      const sugar = document.getElementById("custom-sugar").value;
-      const note = document.getElementById("custom-note").value.trim();
-      const unit_price = activeMenuItem.price + addonSum;
-      const user = getUser();
-
-      const specKey = `${activeRestaurant.id}|${activeMenuItem.id}|${ice}|${sugar}|${addons.join(",")}|${note}`;
-      const existing = user.cart.find(c =>
-        `${c.restaurant_id}|${c.item_id}|${c.ice}|${c.sugar}|${(c.addons || []).join(",")}|${c.note || ""}` === specKey
-      );
-      if (existing) {
-        existing.qty += customQty;
-      } else {
-        user.cart.push({
-          cart_item_id: "c_" + Math.random().toString(36).slice(2, 9),
-          restaurant_id: activeRestaurant.id,
-          restaurant_name: activeRestaurant.name,
-          restaurant_category: activeRestaurant.category,
-          item_id: activeMenuItem.id,
-          name: activeMenuItem.name,
-          category: activeMenuItem.category,
-          base_price: activeMenuItem.price,
-          unit_price,
-          qty: customQty,
-          ice,
-          sugar,
-          addons,
-          note
-        });
+    function getPaymentSummaryLabel() {
+      const m = PAYMENT_METHODS.find(p => p.id === selectedPaymentMethod);
+      if (selectedPaymentMethod === "card") {
+        const u = getUser();
+        const card = (u.saved_cards || []).find(c => c.id === selectedCardId) || u.saved_cards[0];
+        return card ? `信用卡 (${card.brand} •••• ${card.last4})` : "信用卡付款";
       }
-
-      if (isLoggedIn()) saveUsers();
-      const addedName = activeMenuItem.name;
-      closeCustomModal();
-      renderHeader();
-      if (currentTab === "cart") renderCart();
-      showToast(`已加入購物車：${addedName} × ${customQty}`);
+      return m ? m.label : "貨到付款（現金）";
     }
 
-    // ==========================================
-    // 9. 結帳兩步驟流程（步驟 1/2 Google 地圖確認地址 → 步驟 2/2 二次確認）
-    // ==========================================
-    function getSelectedPaymentLabel(user) {
-      if (selectedPaymentMethod === "cod") return deliveryMode === "pickup" ? "現場現金付款" : "貨到付款（現金）";
-      if (selectedPaymentMethod === "linepay") return "LINE Pay";
-      if (selectedPaymentMethod === "applepay") return "Apple Pay";
-      if (selectedPaymentMethod === "jkopay") return "街口支付 JKOPay";
-      const cards = user.saved_cards && user.saved_cards.length ? user.saved_cards : DEFAULT_SAVED_CARDS;
-      const card = cards.find(c => c.id === selectedCardId) || cards[0];
-      return `信用卡 (${card.brand} •••• ${card.last4})`;
-    }
-
-    function getSelectedInvoiceLabel() {
-      if (invoiceType === "member") return "會員雲端發票";
+    function getInvoiceSummaryLabel() {
       if (invoiceType === "carrier") {
         const code = document.getElementById("checkout-carrier-input").value.trim().toUpperCase();
-        return `手機條碼載具 ${code}`;
+        return code ? `手機條碼載具 ${code}` : "手機條碼載具";
       }
+      if (invoiceType === "member") return "美味快點會員雲端發票";
       if (invoiceType === "donate") {
-        const code = document.getElementById("checkout-donate-input").value.trim();
+        const code = document.getElementById("checkout-donate-input").value.trim() || "919";
         return `愛心捐贈碼 ${code}`;
       }
-      const taxId = document.getElementById("checkout-taxid-input").value.trim();
-      return `公司統一編號 ${taxId}`;
+      if (invoiceType === "company") {
+        const tax = document.getElementById("checkout-taxid-input").value.trim();
+        return `公司三聯式發票（統編 ${tax}）`;
+      }
+      return "雲端電子發票";
     }
 
+    function renderCartPaymentAndInvoice() {
+      const u = getUser();
+
+      // 付款方式清單
+      const payListEl = document.getElementById("payment-methods-list");
+      payListEl.innerHTML = PAYMENT_METHODS.map(pm => {
+        const active = pm.id === selectedPaymentMethod;
+        return `
+          <label onclick="selectPaymentMethod('${pm.id}')"
+            class="flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition ${active ? 'border-neutral-950 bg-white shadow-sm' : 'border-neutral-200 bg-white/70 hover:bg-white'}">
+            <div class="flex items-center gap-2.5">
+              <span class="w-4 h-4 rounded-full border flex items-center justify-center ${active ? 'border-neutral-950' : 'border-neutral-400'}">
+                ${active ? '<span class="w-2 h-2 rounded-full bg-neutral-950"></span>' : ''}
+              </span>
+              <div>
+                <p class="text-xs font-extrabold text-neutral-900">${escapeHtml(pm.label)}</p>
+                <p class="text-[11px] text-neutral-500">${escapeHtml(pm.desc)}</p>
+              </div>
+            </div>
+          </label>
+        `;
+      }).join("");
+
+      // 信用卡展開區
+      const cardPanel = document.getElementById("credit-card-panel");
+      cardPanel.classList.toggle("hidden", selectedPaymentMethod !== "card");
+      if (selectedPaymentMethod === "card") {
+        const cards = u.saved_cards || [];
+        document.getElementById("saved-cards-list").innerHTML = cards.map(c => {
+          const active = c.id === selectedCardId;
+          return `
+            <div onclick="selectSavedCard('${c.id}')"
+              class="p-2.5 rounded-xl border flex items-center justify-between text-xs cursor-pointer ${active ? 'border-brand bg-emerald-50/60 font-extrabold' : 'border-neutral-200 hover:bg-neutral-50'}">
+              <span>${escapeHtml(c.brand)} •••• ${escapeHtml(c.last4)}</span>
+              <span class="text-neutral-400">到期 ${escapeHtml(c.expiry)}</span>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // 發票類型按鈕與面板
+      ["carrier", "member", "donate", "company"].forEach(t => {
+        const btn = document.getElementById(`inv-btn-${t}`);
+        if (btn) {
+          btn.className = t === invoiceType
+            ? "py-2 px-2.5 rounded-xl border border-neutral-950 bg-neutral-950 text-white text-center transition"
+            : "py-2 px-2.5 rounded-xl border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400 text-center transition";
+        }
+      });
+
+      document.getElementById("inv-panel-carrier").classList.toggle("hidden", invoiceType !== "carrier");
+      document.getElementById("inv-panel-donate").classList.toggle("hidden", invoiceType !== "donate");
+      document.getElementById("inv-panel-company").classList.toggle("hidden", invoiceType !== "company");
+
+      const carrierInput = document.getElementById("checkout-carrier-input");
+      if (carrierInput && !carrierInput.value && u.carrier_code) {
+        carrierInput.value = u.carrier_code;
+      }
+    }
+
+    function renderCart() {
+      const u = getUser();
+      const items = u.cart || [];
+      const listEl = document.getElementById("cart-items-list");
+      const clearBtn = document.getElementById("clear-cart-btn");
+      const multiWarn = document.getElementById("multi-store-warning");
+
+      clearBtn.classList.toggle("hidden", items.length === 0);
+
+      const distinctStores = new Set(items.map(i => i.restaurant_id));
+      multiWarn.classList.toggle("hidden", distinctStores.size <= 1);
+
+      if (!items.length) {
+        listEl.innerHTML = `
+          <div class="py-16 text-center space-y-3 bg-neutral-50 rounded-3xl border border-neutral-200">
+            <p class="text-base font-extrabold text-neutral-900">您的購物車目前是空的</p>
+            <p class="text-xs text-neutral-500">快去挑選喜歡的餐廳與餐點吧！</p>
+            <button type="button" onclick="switchTab('home')" class="px-6 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-extrabold">瀏覽合作餐廳</button>
+          </div>`;
+      } else {
+        listEl.innerHTML = items.map((item, idx) => {
+          const specParts = [];
+          if (item.ice && !item.ice.includes("不適用")) specParts.push(item.ice);
+          if (item.sugar && !item.sugar.includes("不適用")) specParts.push(item.sugar);
+          if (item.addons && item.addons.length) specParts.push(item.addons.join("、"));
+          if (item.note) specParts.push(`備註：${item.note}`);
+
+          return `
+            <div class="p-4 rounded-2xl border border-neutral-200 bg-white flex items-start justify-between gap-4">
+              <div class="space-y-1 flex-1 min-w-0">
+                <p class="text-[11px] font-bold text-brandDark">${escapeHtml(item.restaurant_name)}</p>
+                <h4 class="font-extrabold text-sm sm:text-base text-neutral-950">${escapeHtml(item.name)}</h4>
+                ${specParts.length ? `<p class="text-xs text-neutral-500 leading-relaxed">${escapeHtml(specParts.join(" · "))}</p>` : ""}
+                <p class="text-sm font-extrabold text-neutral-900 pt-1">$${item.unit_price * item.qty} <span class="text-xs font-normal text-neutral-400">($${item.unit_price}/份)</span></p>
+              </div>
+              <div class="flex flex-col items-end gap-2 shrink-0">
+                <div class="flex items-center border border-neutral-200 rounded-full overflow-hidden">
+                  <button type="button" onclick="updateCartQty(${idx}, -1)" aria-label="減少數量" class="w-8 h-8 font-bold hover:bg-neutral-100">−</button>
+                  <span class="w-7 text-center text-xs font-extrabold">${item.qty}</span>
+                  <button type="button" onclick="updateCartQty(${idx}, 1)" aria-label="增加數量" class="w-8 h-8 font-bold hover:bg-neutral-100">+</button>
+                </div>
+                <button type="button" onclick="removeCartItem(${idx})" class="text-[11px] font-bold text-neutral-400 hover:text-red-600 transition">移除</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // 會員優惠橫幅與折扣碼狀態
+      const vipBanner = document.getElementById("vip-promo-banner");
+      const promoInput = document.getElementById("promo-input");
+      const promoBtn = document.getElementById("promo-apply-btn");
+
+      if (u.is_vip) {
+        vipBanner.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs leading-relaxed";
+        vipBanner.innerHTML = `👑 <strong>FoodOrder One 尊榮禮遇生效中</strong>：已為您折抵 $${PRICING.DELIVERY_FEE} 外送費與 $${PRICING.SERVICE_FEE} 平台服務費！`;
+        promoInput.disabled = false;
+        promoBtn.disabled = false;
+      } else {
+        vipBanner.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-relaxed flex items-center justify-between gap-2";
+        vipBanner.innerHTML = `
+          <span>升級 One 會員立省 $${PRICING.DELIVERY_FEE + PRICING.SERVICE_FEE} 運費與服務費</span>
+          <button type="button" onclick="openVipModal()" class="px-3 py-1 rounded-full bg-neutral-950 text-white font-bold shrink-0">升級</button>
+        `;
+        promoInput.disabled = true;
+        promoBtn.disabled = true;
+      }
+
+      renderCartPaymentAndInvoice();
+
+      // 金額試算
+      const totals = calculateCartTotals();
+      document.getElementById("sum-subtotal").textContent = `$${totals.subtotal}`;
+      document.getElementById("sum-mode-label").textContent = deliveryMode === "pickup" ? "自取免運" : "外送";
+      document.getElementById("sum-delivery").textContent = `$${totals.deliveryFee}`;
+      document.getElementById("sum-service").textContent = `$${totals.serviceFee}`;
+      document.getElementById("sum-discount").textContent = `-$${totals.discount}`;
+      document.getElementById("sum-total").textContent = `$${totals.total}`;
+
+      const checkoutBtn = document.getElementById("checkout-btn");
+      checkoutBtn.disabled = items.length === 0;
+    }
+
+    // 結帳流程步驟 1：地址與 Google 地圖標記
     function startCheckoutFlow() {
-      const user = getUser();
-      if (!user.cart.length) return showToast("購物車是空的，請先加入餐點");
+      const u = getUser();
+      if (!u.cart.length) return showToast("購物車內尚無餐點");
 
       if (!isLoggedIn()) {
-        showToast("請先登入會員後再進行結帳");
+        showToast("請先登入或快速註冊後即可完成結帳", "前往登入", openLoginModal);
         openLoginModal();
         return;
       }
 
-      const sum = calculateCartSummary(user, deliveryMode, promoCode);
-      if (promoCode.trim() && !sum.promo_valid) {
-        return showToast(sum.promo_msg || "請先移除或修正無效的優惠碼");
-      }
-
+      // 檢核發票欄位
       if (invoiceType === "carrier") {
         const code = document.getElementById("checkout-carrier-input").value.trim().toUpperCase();
-        if (!isValidCarrier(code)) return showToast("請輸入正確的 8 碼手機條碼載具（例如 /AB12345）");
+        if (!isValidCarrier(code)) {
+          return showToast("請輸入正確的手機條碼載具（/ 開頭共 8 碼）");
+        }
       } else if (invoiceType === "donate") {
-        const code = document.getElementById("checkout-donate-input").value.trim();
-        if (!/^\d{3,7}$/.test(code)) return showToast("請輸入 3–7 碼數字愛心捐贈碼");
+        const dCode = document.getElementById("checkout-donate-input").value.trim();
+        if (!/^\d{3,7}$/.test(dCode)) {
+          return showToast("愛心捐贈碼須為 3–7 碼數字");
+        }
       } else if (invoiceType === "company") {
         const taxId = document.getElementById("checkout-taxid-input").value.trim();
-        if (!/^\d{8}$/.test(taxId)) return showToast("請輸入 8 碼數字公司統一編號");
+        if (!/^\d{8}$/.test(taxId)) {
+          return showToast("公司統一編號須為 8 碼數字");
+        }
       }
 
       openAddressModal("checkout");
     }
 
-    function openAddressModal(mode) {
+    function openAddressModal(mode = "header") {
       addressModalMode = mode;
-      const user = getUser();
-      const isPickupCheckout = mode === "checkout" && deliveryMode === "pickup";
+      const u = getUser();
+      const badge = document.getElementById("address-step-badge");
+      const title = document.getElementById("address-modal-title");
+      const confirmBtn = document.getElementById("addr-confirm-btn");
+      const inputSec = document.getElementById("address-input-section");
+      const pickupSec = document.getElementById("pickup-address-info");
 
-      document.getElementById("address-step-badge").classList.toggle("hidden", mode !== "checkout");
-      document.getElementById("address-modal-title").textContent = isPickupCheckout
-        ? "確認自取門市位置"
-        : (mode === "checkout" ? "確認外送地址與 Google 地圖標記" : "設定您的外送地址");
-      document.getElementById("addr-confirm-btn").textContent = mode === "checkout"
-        ? "確認地址，前往最後確認 →"
-        : "儲存預設外送地址";
+      const currentAddr = u.address || GUEST_ADDRESS;
+      document.getElementById("addr-input").value = currentAddr;
+      document.getElementById("addr-note-input").value = u.address_note || GUEST_ADDRESS_NOTE || "";
 
-      document.getElementById("address-input-section").classList.toggle("hidden", isPickupCheckout);
-      document.getElementById("pickup-address-info").classList.toggle("hidden", !isPickupCheckout);
-
-      let targetAddr = user.address || GUEST_ADDRESS;
-      if (isPickupCheckout) {
-        const firstRest = RESTAURANTS.find(r => r.id === user.cart[0].restaurant_id);
-        targetAddr = firstRest ? firstRest.address : targetAddr;
-        document.getElementById("pickup-store-address-text").textContent = `${firstRest ? firstRest.name : ''} — ${targetAddr}`;
+      if (mode === "checkout") {
+        badge.classList.remove("hidden");
+        title.textContent = deliveryMode === "pickup" ? "確認自取門市位置" : "確認配送地址與 Google 地圖標記";
+        confirmBtn.textContent = "確認地址，前往最後確認 →";
       } else {
-        document.getElementById("addr-input").value = targetAddr;
-        document.getElementById("addr-note-input").value = user.address_note || "";
+        badge.classList.add("hidden");
+        title.textContent = "設定預設外送地址";
+        confirmBtn.textContent = "儲存外送地址";
       }
 
-      updateAddressMapFrame(targetAddr);
+      if (mode === "checkout" && deliveryMode === "pickup") {
+        inputSec.classList.add("hidden");
+        pickupSec.classList.remove("hidden");
+        const firstRest = RESTAURANTS.find(r => r.id === u.cart[0]?.restaurant_id) || RESTAURANTS[0];
+        const storeText = `${firstRest.name}（${firstRest.address}）`;
+        document.getElementById("pickup-store-address-text").textContent = storeText;
+        updateAddressMapEmbed(firstRest.address);
+      } else {
+        inputSec.classList.remove("hidden");
+        pickupSec.classList.add("hidden");
+        updateAddressMapEmbed(currentAddr);
+      }
+
       openModalById("address-modal");
     }
 
@@ -2423,92 +2389,98 @@
       closeModalById("address-modal");
     }
 
-    function updateAddressMapFrame(addr) {
-      const clean = (addr || "台中市霧峰區吉峰東路168號").trim();
-      document.getElementById("addr-map-iframe").src = `https://maps.google.com/maps?q=${encodeURIComponent(clean)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
-      document.getElementById("addr-map-ext-link").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clean)}`;
+    function updateAddressMapEmbed(queryText) {
+      const q = encodeURIComponent(queryText || "台中市霧峰區吉峰東路168號");
+      document.getElementById("addr-map-iframe").src = `https://maps.google.com/maps?q=${q}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+      document.getElementById("addr-map-ext-link").href = `https://www.google.com/maps/search/?api=1&query=${q}`;
     }
 
     function previewAddressOnMap() {
-      const val = document.getElementById("addr-input").value.trim();
-      if (!val) return showToast("請輸入地址");
-      updateAddressMapFrame(val);
+      const addr = document.getElementById("addr-input").value.trim();
+      if (!addr) return showToast("請先輸入地址再標記地圖");
+      updateAddressMapEmbed(addr);
+      showToast("已在地圖上更新標記位置");
     }
 
     function pickPresetAddress(addr) {
       document.getElementById("addr-input").value = addr;
-      updateAddressMapFrame(addr);
+      updateAddressMapEmbed(addr);
     }
 
     function useGpsForAddress() {
       if (!navigator.geolocation) {
-        pickPresetAddress("台中市霧峰區吉峰東路168號（朝陽科技大學）");
-        return showToast("已套用霧峰區示範定位地址");
+        return showToast("您的瀏覽器不支援定位功能");
       }
+      showToast("正在取得您的 GPS 定位...");
       navigator.geolocation.getCurrentPosition(
         pos => {
           const coords = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-          pickPresetAddress(coords);
-          showToast("已取得您的目前定位並標記於地圖");
+          document.getElementById("addr-input").value = coords;
+          updateAddressMapEmbed(coords);
+          showToast("已帶入您目前的位置座標");
         },
         () => {
-          pickPresetAddress("台中市霧峰區吉峰東路168號（朝陽科技大學）");
-          showToast("預覽環境未授權 GPS，已自動帶入霧峰區定位");
-        },
-        { timeout: 4000 }
+          showToast("無法取得定位權限，請手動輸入地址或點選常用地標");
+        }
       );
     }
 
     function confirmAddressStep() {
-      const user = getUser();
-      const isPickupCheckout = addressModalMode === "checkout" && deliveryMode === "pickup";
+      const addr = document.getElementById("addr-input").value.trim();
+      const note = document.getElementById("addr-note-input").value.trim();
 
-      if (!isPickupCheckout) {
-        const addr = document.getElementById("addr-input").value.trim();
-        const note = document.getElementById("addr-note-input").value.trim();
-        if (!addr) return showToast("請輸入完整外送地址");
-        if (isLoggedIn()) {
-          user.address = addr;
-          user.address_note = note;
-          saveUsers();
-          syncUserToBackend(user);
-        } else {
-          GUEST_ADDRESS = addr;
-          GUEST_ADDRESS_NOTE = note;
-        }
-        renderHeader();
+      if (!(addressModalMode === "checkout" && deliveryMode === "pickup") && !addr) {
+        return showToast("請輸入外送地址");
       }
 
+      if (isLoggedIn()) {
+        const u = getUser();
+        if (addr) u.address = addr;
+        u.address_note = note;
+        saveUsers();
+        syncUserToBackend(u);
+      } else {
+        if (addr) GUEST_ADDRESS = addr;
+        GUEST_ADDRESS_NOTE = note;
+      }
+
+      renderHeader();
       closeAddressModal();
+
       if (addressModalMode === "checkout") {
         openConfirmCheckoutModal();
       } else {
-        showToast("已更新外送地址");
+        showToast("已更新您的外送地址");
       }
     }
 
+    // 結帳流程步驟 2：二次確認訂單
     function openConfirmCheckoutModal() {
-      const user = getUser();
-      const sum = calculateCartSummary(user, deliveryMode, promoCode);
-      const firstRest = RESTAURANTS.find(r => r.id === user.cart[0]?.restaurant_id);
-      const addrDisplay = deliveryMode === "pickup"
-        ? `${firstRest ? firstRest.name : ''}（${firstRest ? firstRest.address : ''}）`
-        : `${user.address}${user.address_note ? '（' + user.address_note + '）' : ''}`;
+      const u = getUser();
+      const totals = calculateCartTotals();
 
-      document.getElementById("cf-mode").textContent = deliveryMode === "pickup" ? "來店自取" : "外送";
-      document.getElementById("cf-address").textContent = addrDisplay;
-      document.getElementById("cf-payment").textContent = getSelectedPaymentLabel(user);
-      document.getElementById("cf-invoice").textContent = getSelectedInvoiceLabel();
-      document.getElementById("cf-promo").textContent = sum.promo_valid ? `${promoCode} (-$${sum.discount})` : "未使用";
-      document.getElementById("cf-total").textContent = `$${sum.total}`;
+      document.getElementById("cf-mode").textContent = deliveryMode === "pickup" ? "來店自取（免外送費）" : "外送員專人配送";
 
-      document.getElementById("cf-items").innerHTML = user.cart.map(i => `
-        <div class="flex justify-between gap-2 text-xs py-1.5 border-b border-neutral-100">
-          <span class="text-neutral-700"><strong>${escapeHtml(i.name)}</strong> × ${i.qty} <span class="text-neutral-400">(${escapeHtml(i.restaurant_name)})</span></span>
-          <span class="font-bold shrink-0">$${i.unit_price * i.qty}</span>
+      if (deliveryMode === "pickup") {
+        const firstRest = RESTAURANTS.find(r => r.id === u.cart[0]?.restaurant_id) || RESTAURANTS[0];
+        document.getElementById("cf-address").textContent = `${firstRest.name} · ${firstRest.address}`;
+      } else {
+        const noteStr = u.address_note ? `（備註：${u.address_note}）` : "";
+        document.getElementById("cf-address").textContent = `${u.address}${noteStr}`;
+      }
+
+      document.getElementById("cf-payment").textContent = getPaymentSummaryLabel();
+      document.getElementById("cf-invoice").textContent = getInvoiceSummaryLabel();
+      document.getElementById("cf-promo").textContent = totals.discount > 0 ? `${promoCode}（折抵 $${totals.discount}）` : "未使用";
+
+      document.getElementById("cf-items").innerHTML = u.cart.map(item => `
+        <div class="flex justify-between items-center text-xs py-1.5 border-b border-neutral-100">
+          <span class="font-semibold text-neutral-800">${escapeHtml(item.name)} × ${item.qty}</span>
+          <span class="font-bold text-neutral-900">$${item.unit_price * item.qty}</span>
         </div>
       `).join("");
 
+      document.getElementById("cf-total").textContent = `$${totals.total}`;
       openModalById("confirm-checkout-modal");
     }
 
@@ -2522,51 +2494,175 @@
     }
 
     function executeCheckout() {
-      const user = getUser();
-      const sum = calculateCartSummary(user, deliveryMode, promoCode);
-      const firstRest = RESTAURANTS.find(r => r.id === user.cart[0]?.restaurant_id);
-      const deliveryAddr = deliveryMode === "pickup"
-        ? `自取：${firstRest ? firstRest.address : ''}`
-        : `${user.address}${user.address_note ? '（' + user.address_note + '）' : ''}`;
+      const u = getUser();
+      if (!u.cart.length) return;
+      const totals = calculateCartTotals();
 
-      const orderId = "ORD-" + new Date().toISOString().replace(/[-:TZ.]/g, "").slice(2, 14);
+      const firstRest = RESTAURANTS.find(r => r.id === u.cart[0]?.restaurant_id) || RESTAURANTS[0];
+      const finalAddr = deliveryMode === "pickup"
+        ? `${firstRest.name}（${firstRest.address}）`
+        : `${u.address}${u.address_note ? `（${u.address_note}）` : ""}`;
+
+      const orderId = "ORD-" + Date.now().toString().slice(-6);
       const newOrder = {
         order_id: orderId,
         created_at: formatRelativeDate(0),
         delivery_mode: deliveryMode,
-        delivery_address: deliveryAddr,
-        payment_label: getSelectedPaymentLabel(user),
-        invoice_label: getSelectedInvoiceLabel(),
+        delivery_address: finalAddr,
+        payment_label: getPaymentSummaryLabel(),
+        invoice_label: getInvoiceSummaryLabel(),
         status_index: 0,
-        items: user.cart.map(i => ({ ...i })),
-        subtotal: sum.subtotal,
-        delivery_fee: sum.delivery_fee,
-        service_fee: sum.service_fee,
-        discount: sum.discount,
-        total: sum.total,
-        promo_code: sum.promo_valid ? promoCode : ""
+        items: JSON.parse(JSON.stringify(u.cart)),
+        subtotal: totals.subtotal,
+        delivery_fee: totals.deliveryFee,
+        service_fee: totals.serviceFee,
+        discount: totals.discount,
+        total: totals.total,
+        promo_code: totals.discount > 0 ? promoCode : ""
       };
 
-      user.orders.unshift(newOrder);
-      user.cart = [];
+      u.orders.unshift(newOrder);
+      u.cart = [];
       promoCode = "";
-      document.getElementById("promo-input").value = "";
-      saveUsers();
-      syncOrderToBackend(user, newOrder);
-
       highlightedOrderId = orderId;
-      setTimeout(() => {
-        highlightedOrderId = null;
-        if (currentTab === "orders") renderOrders();
-      }, 5000);
+      saveUsers();
+      syncOrderToBackend(u, newOrder);
 
       closeConfirmCheckoutModal();
-      showToast("訂單已送出！系統已同步更新您的口味推薦");
+      showToast(`訂單 ${orderId} 已成立！正在為您追蹤餐點進度`);
       switchTab("orders");
     }
 
     // ==========================================
-    // 10. 登入、三步驟註冊與備用 Google 選擇器
+    // 10. 歷史訂單與即時狀態追蹤
+    // ==========================================
+    function advanceOrderStatus(orderId) {
+      const u = getUser();
+      const ord = (u.orders || []).find(o => o.order_id === orderId);
+      if (!ord) return;
+      if (ord.status_index < 3) {
+        ord.status_index += 1;
+        saveUsers();
+        renderOrders();
+      }
+    }
+
+    function toggleAutoAdvance(enabled) {
+      clearInterval(autoAdvanceTimer);
+      autoAdvanceTimer = null;
+      if (enabled) {
+        autoAdvanceTimer = setInterval(() => {
+          if (!isLoggedIn()) return;
+          const u = getUser();
+          let changed = false;
+          (u.orders || []).forEach(ord => {
+            if (ord.status_index < 3) {
+              ord.status_index += 1;
+              changed = true;
+            }
+          });
+          if (changed) {
+            saveUsers();
+            if (currentTab === "orders") renderOrders();
+          }
+        }, 10000);
+        showToast("已開啟每 10 秒自動推進訂單進度");
+      }
+    }
+
+    function reorderOrder(orderId) {
+      const u = getUser();
+      const ord = (u.orders || []).find(o => o.order_id === orderId);
+      if (!ord) return;
+      const cloned = JSON.parse(JSON.stringify(ord.items || []));
+      u.cart.push(...cloned);
+      saveUsers();
+      showToast("已將歷史訂單餐點加入購物車！");
+      switchTab("cart");
+    }
+
+    function renderOrders() {
+      const u = getUser();
+      const listEl = document.getElementById("orders-list");
+
+      if (!isLoggedIn()) {
+        listEl.innerHTML = `
+          <div class="py-16 text-center space-y-3 bg-neutral-50 rounded-3xl border border-neutral-200">
+            <p class="text-base font-extrabold text-neutral-900">登入後即可檢視歷史訂單與即時追蹤</p>
+            <button type="button" onclick="openLoginModal()" class="px-6 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-extrabold">立即登入</button>
+          </div>`;
+        return;
+      }
+
+      const orders = u.orders || [];
+      if (!orders.length) {
+        listEl.innerHTML = `
+          <div class="py-16 text-center space-y-3 bg-neutral-50 rounded-3xl border border-neutral-200">
+            <p class="text-base font-extrabold text-neutral-900">您目前還沒有歷史訂單</p>
+            <p class="text-xs text-neutral-500">完成第一筆點餐後，就能在這裡追蹤出餐與外送進度！</p>
+            <button type="button" onclick="switchTab('home')" class="px-6 py-2.5 rounded-full bg-neutral-950 text-white text-xs font-extrabold">立即前往點餐</button>
+          </div>`;
+        return;
+      }
+
+      listEl.innerHTML = orders.map(ord => {
+        const steps = ord.delivery_mode === "pickup" ? STATUS_STEPS_PICKUP : STATUS_STEPS_DELIVERY;
+        const curIdx = Math.min(3, Math.max(0, ord.status_index || 0));
+        const isDone = curIdx >= 3;
+        const isHighlight = ord.order_id === highlightedOrderId;
+
+        return `
+          <article class="p-5 sm:p-6 rounded-3xl border ${isHighlight ? 'border-brand ring-2 ring-brand/20' : 'border-neutral-200'} bg-white space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-xs font-extrabold text-neutral-500">${escapeHtml(ord.order_id)}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${isDone ? 'bg-neutral-100 text-neutral-700' : 'bg-emerald-50 text-emerald-700'}">
+                    ${escapeHtml(steps[curIdx])}
+                  </span>
+                </div>
+                <p class="text-xs text-neutral-400 mt-1">${escapeHtml(ord.created_at)} · ${escapeHtml(ord.payment_label)} · ${escapeHtml(ord.invoice_label)}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-lg font-extrabold text-neutral-950">$${ord.total}</p>
+                <p class="text-[11px] text-neutral-500 truncate max-w-[240px]">${escapeHtml(ord.delivery_address)}</p>
+              </div>
+            </div>
+
+            <!-- 4 階段進度條 -->
+            <div class="grid grid-cols-4 gap-2">
+              ${steps.map((stepLabel, sIdx) => {
+                const passed = sIdx <= curIdx;
+                return `
+                  <div class="space-y-1.5">
+                    <div class="h-1.5 rounded-full ${passed ? 'bg-brand' : 'bg-neutral-200'}"></div>
+                    <p class="text-[11px] font-bold text-center ${passed ? 'text-neutral-900' : 'text-neutral-400'}">${escapeHtml(stepLabel)}</p>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+
+            <!-- 餐點列表 -->
+            <div class="space-y-1.5 bg-neutral-50 rounded-2xl p-3.5 text-xs">
+              ${(ord.items || []).map(it => `
+                <div class="flex justify-between gap-2">
+                  <span class="font-semibold text-neutral-800">${escapeHtml(it.restaurant_name)} · ${escapeHtml(it.name)} × ${it.qty}</span>
+                  <span class="font-bold text-neutral-900">$${it.unit_price * it.qty}</span>
+                </div>
+              `).join("")}
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-2.5 pt-1">
+              ${!isDone ? `<button type="button" onclick="advanceOrderStatus('${escapeHtml(ord.order_id)}')" class="px-4 py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-extrabold transition">推進下一階段進度 →</button>` : ""}
+              <button type="button" onclick="reorderOrder('${escapeHtml(ord.order_id)}')" class="px-4 py-2 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-extrabold transition">再次點購</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // ==========================================
+    // 11. 登入與三步驟註冊
     // ==========================================
     function handleAccountBtnClick() {
       if (isLoggedIn()) openAccountModal("profile");
@@ -2574,7 +2670,11 @@
     }
 
     function openLoginModal() {
+      googleModalPurpose = "login";
       document.getElementById("login-username").value = "";
+      document.getElementById("demo-account-list").classList.add("hidden");
+      const chevron = document.getElementById("demo-list-chevron");
+      if (chevron) chevron.classList.remove("rotate-180");
       renderGoogleSignInButtons();
       openModalById("login-modal");
     }
@@ -2607,13 +2707,22 @@
       renderActiveView();
     }
 
-    function quickDemoLogin() {
-      CURRENT_USER_KEY = "student01";
-      mergeGuestCartIntoUser(USERS.student01);
+    function toggleDemoAccountList() {
+      const list = document.getElementById("demo-account-list");
+      const chevron = document.getElementById("demo-list-chevron");
+      const willOpen = list.classList.contains("hidden");
+      list.classList.toggle("hidden", !willOpen);
+      if (chevron) chevron.classList.toggle("rotate-180", willOpen);
+    }
+
+    function quickDemoLogin(accountKey = "student01") {
+      const target = USERS[accountKey] ? accountKey : "student01";
+      CURRENT_USER_KEY = target;
+      mergeGuestCartIntoUser(USERS[target]);
       promoCode = "";
       saveUsers();
       closeLoginModal();
-      showToast("已使用示範帳號（王小明）登入");
+      showToast(`已使用示範帳號（${USERS[target].display_name}）登入`);
       renderActiveView();
     }
 
@@ -2727,74 +2836,8 @@
       renderActiveView();
     }
 
-    // 備用 Google 選擇器（用於預覽 iframe 沙盒環境）
-    function openGoogleChooser(purpose) {
-      googleModalPurpose = purpose || "login";
-      document.getElementById("custom-gmail-input").value = "";
-      openModalById("google-modal");
-    }
-
-    function closeGoogleModal() {
-      closeModalById("google-modal");
-    }
-
-    function selectGoogleAccount(name, email) {
-      const cleanEmail = email.trim().toLowerCase();
-      if (googleModalPurpose === "bind" && isLoggedIn()) {
-        const u = getUser();
-        u.google_email = cleanEmail;
-        saveUsers();
-        syncUserToBackend(u);
-        closeGoogleModal();
-        renderAccountModal();
-        renderHeader();
-        showToast(`已成功繫結 Google 帳號：${cleanEmail}`);
-        return;
-      }
-
-      const key = "g_" + cleanEmail.split("@")[0].replace(/[^a-z0-9_]/g, "");
-      if (!USERS[key]) {
-        USERS[key] = {
-          username: key,
-          display_name: name,
-          phone: "",
-          birthday: "",
-          address: GUEST_ADDRESS,
-          address_note: "",
-          is_vip: false,
-          google_sub: "",
-          google_email: cleanEmail,
-          google_picture: "",
-          carrier_code: "",
-          saved_cards: [...DEFAULT_SAVED_CARDS],
-          favorites: ["r7"],
-          cart: [],
-          orders: []
-        };
-      } else {
-        USERS[key].google_email = cleanEmail;
-      }
-      CURRENT_USER_KEY = key;
-      mergeGuestCartIntoUser(USERS[key]);
-      saveUsers();
-      syncUserToBackend(USERS[key]);
-      closeGoogleModal();
-      closeLoginModal();
-      showToast(`已透過 Google 帳戶登入：${name}`);
-      renderActiveView();
-    }
-
-    function submitCustomGoogleAccount() {
-      const email = document.getElementById("custom-gmail-input").value.trim().toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return showToast("請輸入正確的 Gmail 電子郵件格式");
-      }
-      const name = email.split("@")[0];
-      selectGoogleAccount(name, email);
-    }
-
     // ==========================================
-    // 11. 真實 Google Identity Services 與 Python 後端雙模式同步
+    // 12. 真實 Google Identity Services 與 Python 後端雙模式同步
     // ==========================================
     function decodeJwtPayload(token) {
       const base64Url = token.split(".")[1];
@@ -2869,34 +2912,38 @@
     }
 
     function renderGoogleSignInButtons() {
-      if (!window.google || !google.accounts || !google.accounts.id) return;
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredentialResponse
-      });
-
-      const loginContainer = document.getElementById("g-signin-btn-login");
-      if (loginContainer) {
-        loginContainer.innerHTML = "";
-        google.accounts.id.renderButton(loginContainer, {
-          theme: "outline",
-          size: "large",
-          width: 340,
-          text: "continue_with",
-          shape: "pill",
-          logo_alignment: "left"
+      try {
+        if (!window.google || !google.accounts || !google.accounts.id) return;
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredentialResponse
         });
-      }
 
-      const bindContainer = document.getElementById("g-signin-btn-bind");
-      if (bindContainer && !bindContainer.classList.contains("hidden")) {
-        bindContainer.innerHTML = "";
-        google.accounts.id.renderButton(bindContainer, {
-          theme: "filled_blue",
-          size: "medium",
-          text: "signin_with",
-          shape: "pill"
-        });
+        const loginContainer = document.getElementById("g-signin-btn-login");
+        if (loginContainer) {
+          loginContainer.innerHTML = "";
+          google.accounts.id.renderButton(loginContainer, {
+            theme: "outline",
+            size: "large",
+            width: 340,
+            text: "continue_with",
+            shape: "pill",
+            logo_alignment: "left"
+          });
+        }
+
+        const bindContainer = document.getElementById("g-signin-btn-bind");
+        if (bindContainer && !bindContainer.classList.contains("hidden")) {
+          bindContainer.innerHTML = "";
+          google.accounts.id.renderButton(bindContainer, {
+            theme: "filled_blue",
+            size: "medium",
+            text: "signin_with",
+            shape: "pill"
+          });
+        }
+      } catch (e) {
+        console.warn("Google Sign-In 按鈕初始化略過（非授權網域或離線環境）", e);
       }
     }
 
@@ -2941,7 +2988,7 @@
     }
 
     // ==========================================
-    // 12. 個人資料設定與帳號管理 Modal
+    // 13. 個人資料設定與帳號管理 Modal
     // ==========================================
     function openAccountModal(tab = "profile") {
       renderAccountModal();
@@ -2999,6 +3046,7 @@
         gStatus.className = "text-xs font-bold text-emerald-700";
         gEmail.textContent = u.google_email;
         gBindWrap.classList.add("hidden");
+        gBtn.classList.remove("hidden");
         gBtn.textContent = "解除 Google 繫結";
         gBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-red-50 text-red-600 hover:bg-red-100 transition";
       } else {
@@ -3007,9 +3055,8 @@
         gEmail.textContent = "點擊下方 Google 按鈕即可繫結您的真實 Google 帳號";
         googleModalPurpose = "bind";
         gBindWrap.classList.remove("hidden");
+        gBtn.classList.add("hidden");
         renderGoogleSignInButtons();
-        gBtn.textContent = "使用備用選擇器繫結";
-        gBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition";
       }
 
       // 載具綁定狀態
@@ -3063,8 +3110,6 @@
         renderAccountModal();
         renderHeader();
         showToast("已解除 Google 帳號繫結");
-      } else {
-        openGoogleChooser("bind");
       }
     }
 
@@ -3099,7 +3144,7 @@
     }
 
     // ==========================================
-    // 13. FoodOrder One 會員管理 Modal
+    // 14. FoodOrder One 會員管理 Modal
     // ==========================================
     function openVipModal() {
       if (!isLoggedIn()) {
