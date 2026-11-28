@@ -77,7 +77,7 @@
       <!-- 桌機版搜尋欄 -->
       <div class="hidden md:flex flex-1 max-w-md mx-2 relative">
         <svg class="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.3-4.3"/></svg>
-        <input id="desktop-search" type="search" oninput="onSearchInput(this.value)" placeholder="搜尋餐廳、麥當勞、披薩、珍珠、起司..."
+        <input id="desktop-search" type="search" oninput="onSearchInput(this.value)" placeholder="搜尋餐廳、麥當勞、肯德基、披薩、珍珠..."
           class="w-full pl-10 pr-4 py-2 rounded-full bg-neutral-100 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition" />
       </div>
 
@@ -394,47 +394,90 @@
 
   <!-- ==================== Modal 2：餐點客製化 ==================== -->
   <div id="custom-modal" role="dialog" aria-modal="true" aria-labelledby="custom-item-name" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-    <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+    <div class="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl max-h-[92vh] flex flex-col overflow-hidden shadow-2xl">
       <div class="relative h-40 bg-neutral-100 shrink-0">
         <img id="custom-item-img" alt="餐點圖片" class="w-full h-full object-cover" />
         <button type="button" onclick="closeCustomModal()" aria-label="關閉客製化視窗" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/95 text-neutral-900 flex items-center justify-center shadow font-bold">✕</button>
       </div>
-      <div class="p-5 overflow-y-auto space-y-4">
+      <div class="p-5 overflow-y-auto space-y-5">
         <div>
           <h3 id="custom-item-name" class="text-lg font-extrabold text-neutral-950"></h3>
           <p id="custom-item-desc" class="text-xs text-neutral-500 mt-1"></p>
           <p id="custom-item-price" class="text-base font-extrabold text-brandDark mt-1.5"></p>
         </div>
 
-        <!-- 冰塊與甜度 -->
-        <div class="space-y-1.5">
+        <!-- 飲品專用：冰塊與甜度 -->
+        <div id="custom-drink-section" class="space-y-1.5">
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div>
               <label for="custom-ice" class="block font-bold text-neutral-700 mb-1">冰塊調整</label>
-              <select id="custom-ice" class="w-full border border-neutral-300 rounded-xl px-3 py-2 font-semibold bg-white disabled:bg-neutral-100 disabled:text-neutral-400">
+              <select id="custom-ice" class="w-full border border-neutral-300 rounded-xl px-3 py-2 font-semibold bg-white">
                 <option>正常冰</option><option>少冰</option><option>微冰</option><option>去冰</option><option>熱飲／不適用</option>
               </select>
             </div>
             <div>
               <label for="custom-sugar" class="block font-bold text-neutral-700 mb-1">甜度調整</label>
-              <select id="custom-sugar" class="w-full border border-neutral-300 rounded-xl px-3 py-2 font-semibold bg-white disabled:bg-neutral-100 disabled:text-neutral-400">
+              <select id="custom-sugar" class="w-full border border-neutral-300 rounded-xl px-3 py-2 font-semibold bg-white">
                 <option>正常糖</option><option>少糖</option><option>半糖</option><option>微糖</option><option>無糖／不適用</option>
               </select>
             </div>
           </div>
-          <p id="custom-drink-hint" class="hidden text-[11px] text-neutral-400">此餐點非飲品類別，無需調整冰塊與甜度。</p>
         </div>
 
-        <!-- 加料／配餐升級 -->
-        <div class="space-y-2">
-          <label class="block text-xs font-bold text-neutral-700">加料與配餐升級（可複選）</label>
+        <!-- 點餐機步驟 A：套餐與配餐選擇 -->
+        <div id="custom-combo-section" class="hidden space-y-2.5 pt-1 border-t border-neutral-100">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-extrabold text-neutral-900">1. 選擇單點或超值配餐</label>
+            <span class="text-[11px] font-bold text-brandDark">點餐機套餐組合</span>
+          </div>
+          <div id="custom-combo-options" class="grid grid-cols-1 gap-2 text-xs"></div>
+
+          <!-- 配餐飲料與附餐明細（選套餐時展開） -->
+          <div id="custom-combo-details" class="hidden p-3.5 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3 text-xs">
+            <div>
+              <label for="combo-drink-select" class="block font-bold text-neutral-700 mb-1">選擇配餐飲料</label>
+              <select id="combo-drink-select" onchange="onComboDetailChange()" class="w-full border border-neutral-300 rounded-xl px-3 py-2 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"></select>
+            </div>
+            <div id="combo-fries-upgrade-wrap" class="hidden">
+              <label class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-neutral-200 cursor-pointer">
+                <span class="font-semibold text-neutral-800">配餐薯條升級大薯</span>
+                <span class="flex items-center gap-2 font-bold text-neutral-700">
+                  <span>+$16</span>
+                  <input id="combo-large-fries" type="checkbox" onchange="onComboDetailChange()" class="accent-neutral-950 w-4 h-4 rounded" />
+                </span>
+              </label>
+            </div>
+            <div id="combo-sauce-wrap" class="hidden">
+              <label for="combo-sauce-select" class="block font-bold text-neutral-700 mb-1">選擇配餐沾醬</label>
+              <select id="combo-sauce-select" onchange="onComboDetailChange()" class="w-full border border-neutral-300 rounded-xl px-3 py-2 font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 點餐機步驟 B：食材與醬料客製化（核心主料不可歸零） -->
+        <div id="custom-kiosk-section" class="hidden space-y-2.5 pt-1 border-t border-neutral-100">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <label class="block text-xs font-extrabold text-neutral-900">2. 食材與醬料客製化（0～2 份）</label>
+              <p class="text-[11px] text-neutral-500 mt-0.5">基本主料不可歸零（最少 1），醬料與配料可用 − / + 調整 0～2</p>
+            </div>
+            <button type="button" onclick="resetKioskIngredients()" class="px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-[11px] font-bold text-neutral-700 shrink-0 transition">
+              恢復預設配方
+            </button>
+          </div>
+          <div id="custom-kiosk-list" class="space-y-2"></div>
+        </div>
+
+        <!-- 加料／單點加購 -->
+        <div id="custom-addons-section" class="space-y-2 pt-1 border-t border-neutral-100">
+          <label id="custom-addons-label" class="block text-xs font-extrabold text-neutral-900">加料與額外加購（可複選）</label>
           <div id="custom-addons" class="grid grid-cols-1 gap-2 text-xs"></div>
         </div>
 
         <!-- 餐點備註 -->
         <div class="space-y-1">
           <label for="custom-note" class="block text-xs font-bold text-neutral-700">給店家的備註（選填）</label>
-          <input id="custom-note" type="text" maxlength="60" placeholder="例如：不要酸黃瓜、醬料分開、去蔥..."
+          <input id="custom-note" type="text" maxlength="60" placeholder="例如：現炸請稍等、紙巾多附、醬料分開..."
             class="w-full px-3.5 py-2 rounded-xl border border-neutral-300 text-xs focus:outline-none focus:ring-2 focus:ring-neutral-900" />
         </div>
       </div>
@@ -832,7 +875,7 @@
     ];
 
     // ==========================================
-    // 2. 12 家合作餐廳資料（含麥當勞官方完整菜單）
+    // 2. 12 家合作餐廳資料（含麥當勞與肯德基官方完整菜單及點餐機客製化設定）
     // ==========================================
     const RESTAURANTS = [
       {
@@ -847,39 +890,37 @@
         address: "台中市霧峰區中正路839號",
         min_order: 100,
         hours: "05:00–24:00",
-        notice: "早餐供應至 10:30；超值全餐與 1+1 星級點 10:30 起供應。每份 4/6 塊麥克鷄塊附 1 盒沾醬，10 塊附 2 盒。",
+        notice: "早餐供應至 10:30；超值全餐與 1+1 星級點 10:30 起供應。點選漢堡可開啟自助點餐機配餐與食材客製化。",
         cover: "https://i.ibb.co/XkbL9pbm/Gemini-Generated-Image-2bzha72bzha72bzh.jpg",
         tags: ["超值全餐", "極選系列", "1+1星級點", "McCafé®"],
+        combo_brand: "mcd",
         custom_categories: ["全部", "超值全餐", "極選系列", "1+1星級點", "早餐", "麥當勞分享盒", "McCafé®", "點心", "飲料"],
         custom_addons: {
-          "升級經典配餐（中薯+$38飲）": 65,
-          "升級炫冰配餐（冰炫風+小薯+$38飲）": 99,
-          "升級豪吃配餐（6塊鷄塊+小薯+$38飲）": 99,
-          "薯條升級大薯": 16,
-          "加購吉事片": 15,
-          "加購糖醋醬": 5
+          "加購糖醋醬": 5,
+          "加購蜂蜜芥末醬": 5,
+          "加購蘋果派": 40
         },
         menu: [
-          { id: "m701", name: "大麥克®", category: "超值全餐", price: 78, desc: "雙層 100% 純牛肉、經典大麥克醬、切達吉事、爽脆生菜與酸黃瓜，佐三層芝麻麵包", img: "https://i.ibb.co/7Nn9KCvM/Gemini-Generated-Image-kjhw3zkjhw3zkjhw.jpg" },
-          { id: "m702", name: "雙層牛肉吉事堡", category: "超值全餐", price: 68, desc: "雙層純牛肉片加上雙層香濃切達吉事、酸黃瓜與洋蔥丁，經典濃郁滋味", img: "https://i.ibb.co/Kx1WrdJM/Gemini-Generated-Image-y0mfezy0mfezy0mf.jpg" },
-          { id: "m703", name: "四盎司牛肉堡", category: "超值全餐", price: 92, desc: "厚實四盎司純牛肉搭配雙層切達吉事、新鮮洋蔥與番茄醬，肉香十足", img: "https://i.ibb.co/TxdFMDLB/Gemini-Generated-Image-rtrkl5rtrkl5rtrk.jpg" },
-          { id: "m704", name: "勁辣鷄腿堡", category: "超值全餐", price: 78, desc: "整塊去骨辣味鷄腿排現炸酥脆微辣多汁，搭配新鮮美生菜與特調沙拉醬", img: "https://i.ibb.co/nTZQhC5/Gemini-Generated-Image-xx748nxx748nxx74.jpg" },
-          { id: "m705", name: "麥香魚®", category: "超值全餐", price: 52, desc: "嚴選鮮嫩阿拉斯加鱈魚酥炸金黃，搭配獨特酸甜塔塔醬、切達吉事與蒸麵包", img: "https://i.ibb.co/YB60vN6r/Gemini-Generated-Image-94coib94coib94co.jpg" },
-          { id: "m706", name: "麥克鷄塊®（6塊）", category: "超值全餐", price: 68, desc: "外酥內嫩人氣經典麥克鷄塊 6 塊（附糖醋醬 1 盒）", img: "https://i.ibb.co/LXZVVwpr/Gemini-Generated-Image-9era2g9era2g9era.jpg" },
-          { id: "m707", name: "麥克鷄塊®（10塊）", category: "超值全餐", price: 109, desc: "大滿足 10 塊經典麥克鷄塊，金黃酥脆停不下來（附糖醋醬 2 盒）", img: "https://i.ibb.co/jPSHFGQf/Gemini-Generated-Image-bcfg0ybcfg0ybcfg.jpg" },
-          { id: "m708", name: "辣味麥脆鷄腿（2塊）", category: "超值全餐", price: 126, desc: "嚴選在地鷄腿先烤後炸鎖住肉汁，微辣酥脆（棒腿或大腿部位恕不指定）", img: "https://i.ibb.co/vx7TPrgk/Gemini-Generated-Image-5tot3k5tot3k5tot.jpg" },
+          { id: "m701", name: "大麥克®", category: "超值全餐", price: 78, allow_combo: true, kiosk_preset: "big_mac", desc: "雙層 100% 純牛肉、經典大麥克醬、切達吉事、爽脆生菜與酸黃瓜，佐三層芝麻麵包", img: "https://i.ibb.co/7Nn9KCvM/Gemini-Generated-Image-kjhw3zkjhw3zkjhw.jpg" },
+          { id: "m702", name: "雙層牛肉吉事堡", category: "超值全餐", price: 68, allow_combo: true, kiosk_preset: "double_cheeseburger", desc: "雙層純牛肉片加上雙層香濃切達吉事、酸黃瓜與洋蔥丁，經典濃郁滋味", img: "https://i.ibb.co/Kx1WrdJM/Gemini-Generated-Image-y0mfezy0mfezy0mf.jpg" },
+          { id: "m703", name: "四盎司牛肉堡", category: "超值全餐", price: 92, allow_combo: true, kiosk_preset: "quarter_pounder", desc: "厚實四盎司純牛肉搭配雙層切達吉事、新鮮洋蔥與番茄醬，肉香十足", img: "https://i.ibb.co/TxdFMDLB/Gemini-Generated-Image-rtrkl5rtrkl5rtrk.jpg" },
+          { id: "m704", name: "勁辣鷄腿堡", category: "超值全餐", price: 78, allow_combo: true, kiosk_preset: "spicy_chicken", desc: "整塊去骨辣味鷄腿排現炸酥脆微辣多汁，搭配新鮮美生菜與特調沙拉醬", img: "https://i.ibb.co/nTZQhC5/Gemini-Generated-Image-xx748nxx748nxx74.jpg" },
+          { id: "m705", name: "麥香魚®", category: "超值全餐", price: 52, allow_combo: true, kiosk_preset: "filet_o_fish", desc: "嚴選鮮嫩阿拉斯加鱈魚酥炸金黃，搭配獨特酸甜塔塔醬、切達吉事與蒸麵包", img: "https://i.ibb.co/YB60vN6r/Gemini-Generated-Image-94coib94coib94co.jpg" },
+          { id: "m706", name: "麥克鷄塊®（6塊）", category: "超值全餐", price: 68, allow_combo: true, kiosk_preset: "nuggets", desc: "外酥內嫩人氣經典麥克鷄塊 6 塊（附沾醬 1 盒）", img: "https://i.ibb.co/LXZVVwpr/Gemini-Generated-Image-9era2g9era2g9era.jpg" },
+          { id: "m707", name: "麥克鷄塊®（10塊）", category: "超值全餐", price: 109, allow_combo: true, kiosk_preset: "nuggets", desc: "大滿足 10 塊經典麥克鷄塊，金黃酥脆停不下來（附沾醬 2 盒）", img: "https://i.ibb.co/jPSHFGQf/Gemini-Generated-Image-bcfg0ybcfg0ybcfg.jpg" },
+          { id: "m708", name: "辣味麥脆鷄腿（2塊）", category: "超值全餐", price: 126, allow_combo: true, kiosk_preset: "fried_chicken", desc: "嚴選在地鷄腿先烤後炸鎖住肉汁，微辣酥脆（棒腿或大腿部位恕不指定）", img: "https://i.ibb.co/vx7TPrgk/Gemini-Generated-Image-5tot3k5tot3k5tot.jpg" },
 
-          { id: "m709", name: "BLT 安格斯牛肉堡", category: "極選系列", price: 124, desc: "4 盎司紐澳安格斯黑牛搭配煙燻厚切培根、牛番茄、原葉生菜與布里歐麵包", img: "https://i.ibb.co/XkMZWM5c/Gemini-Generated-Image-s7l7tfs7l7tfs7l7.jpg" },
-          { id: "m710", name: "蕈菇安格斯牛肉堡", category: "極選系列", price: 134, desc: "安格斯黑牛肉排淋上法式香炒切片蕈菇醬與融化白切達起司，香氣濃郁", img: "https://i.ibb.co/qhTh06R/Gemini-Generated-Image-fwoq1ifwoq1ifwoq.jpg" },
-          { id: "m711", name: "BLT 香烙烤鷄腿堡", category: "極選系列", price: 124, desc: "整塊去骨鷄腿排以香料醃漬高溫烙烤，搭配煙燻培根與鮮切牛番茄", img: "https://i.ibb.co/84xBLsXN/Gemini-Generated-Image-qnty76qnty76qnty.jpg" },
+          { id: "m709", name: "BLT 安格斯牛肉堡", category: "極選系列", price: 124, allow_combo: true, kiosk_preset: "angus_blt", desc: "4 盎司紐澳安格斯黑牛搭配煙燻厚切培根、牛番茄、原葉生菜與布里歐麵包", img: "https://i.ibb.co/XkMZWM5c/Gemini-Generated-Image-s7l7tfs7l7tfs7l7.jpg" },
+          { id: "m710", name: "蕈菇安格斯牛肉堡", category: "極選系列", price: 134, allow_combo: true, kiosk_preset: "mushroom_angus", desc: "安格斯黑牛肉排淋上法式香炒切片蕈菇醬與融化白切達起司，香氣濃郁", img: "https://i.ibb.co/qhTh06R/Gemini-Generated-Image-fwoq1ifwoq1ifwoq.jpg" },
+          { id: "m711", name: "BLT 香烙烤鷄腿堡", category: "極選系列", price: 124, allow_combo: true, kiosk_preset: "blt_chicken", desc: "整塊去骨鷄腿排以香料醃漬高溫烙烤，搭配煙燻培根與鮮切牛番茄", img: "https://i.ibb.co/84xBLsXN/Gemini-Generated-Image-qnty76qnty76qnty.jpg" },
 
           { id: "m712", name: "1+1 星級點：麥香鷄® + 可樂（小）", category: "1+1星級點", price: 50, desc: "紅區經典麥香鷄搭配白區冰鎮小杯可口可樂，超值 $50 銅板組合", img: "https://i.ibb.co/nMbMftN2/Gemini-Generated-Image-al39qoal39qoal39.jpg" },
           { id: "m713", name: "1+1 星級點：麥克雙牛堡 + 檸檬風味紅茶（小）", category: "1+1星級點", price: 69, desc: "紅區麥克雙牛堡搭配白區冰檸檬風味紅茶，$69 星級飽足首選", img: "https://i.ibb.co/Q3kf9STP/Gemini-Generated-Image-fzwv8ifzwv8ifzwv.jpg" },
           { id: "m714", name: "1+1 星級點：OREO 冰炫風® + 檸檬風味紅茶（小）", category: "1+1星級點", price: 69, desc: "紅區人氣 OREO 冰炫風搭配白區清爽小杯冰檸檬風味紅茶，下午茶絕配", img: "https://i.ibb.co/SjdPKmR/Gemini-Generated-Image-reqmrfreqmrfreqm.jpg" },
 
-          { id: "m715", name: "豬肉滿福堡加蛋", category: "早餐", price: 60, desc: "天然酵母滿福麵包夾入香煎豬肉片、現煎太陽蛋與切達吉事（供應至 10:30）", img: "https://i.ibb.co/sv6FPYYx/Gemini-Generated-Image-al3tpzal3tpzal3t.jpg" },
-          { id: "m716", name: "無敵豬肉滿福堡加蛋", category: "早餐", price: 80, desc: "雙層香煎豬肉片加上現煎太陽蛋與切達吉事，滿滿早晨能量（供應至 10:30）", img: "https://i.ibb.co/hxnnqj1P/Gemini-Generated-Image-5b9vli5b9vli5b9v.jpg" },
-          { id: "m717", name: "蕈菇嫩蛋焙果堡", category: "早餐", price: 89, desc: "現烤外Q內軟焙果搭配滑嫩炒蛋與香炒蕈菇醬（供應至 10:30）", img: "https://i.ibb.co/gLDx6NXb/Gemini-Generated-Image-kfjbydkfjbydkfjb.jpg" },
+          { id: "m715", name: "豬肉滿福堡加蛋", category: "早餐", price: 60, kiosk_preset: "breakfast_muffin", desc: "天然酵母滿福麵包夾入香煎豬肉片、現煎太陽蛋與切達吉事（供應至 10:30）", img: "https://i.ibb.co/sv6FPYYx/Gemini-Generated-Image-al3tpzal3tpzal3t.jpg" },
+          { id: "m716", name: "無敵豬肉滿福堡加蛋", category: "早餐", price: 80, kiosk_preset: "breakfast_muffin", desc: "雙層香煎豬肉片加上現煎太陽蛋與切達吉事，滿滿早晨能量（供應至 10:30）", img: "https://i.ibb.co/hxnnqj1P/Gemini-Generated-Image-5b9vli5b9vli5b9v.jpg" },
+          { id: "m717", name: "蕈菇嫩蛋焙果堡", category: "早餐", price: 89, kiosk_preset: "breakfast_muffin", desc: "現烤外Q內軟焙果搭配滑嫩炒蛋與香炒蕈菇醬（供應至 10:30）", img: "https://i.ibb.co/gLDx6NXb/Gemini-Generated-Image-kfjbydkfjbydkfjb.jpg" },
 
           { id: "m718", name: "麥克鷄塊分享盒（20塊）", category: "麥當勞分享盒", price: 209, desc: "20 塊經典麥克鷄塊搭配 1 包大薯（附沾醬 4 盒），聚餐派對必點", img: "https://i.ibb.co/Y4KjWmBZ/Gemini-Generated-Image-jselejselejselej.jpg" },
           { id: "m719", name: "麥脆鷄腿分享盒（6塊）", category: "麥當勞分享盒", price: 420, desc: "6 塊原味或辣味麥脆鷄腿搭配 2 包大薯（限同口味，部位恕不指定）", img: "https://i.ibb.co/HDq9x4Fk/Gemini-Generated-Image-a44twna44twna44t.jpg" },
@@ -911,15 +952,52 @@
         distance: "2.3 公里",
         address: "台中市大里區中興路二段312號",
         min_order: 120,
-        hours: "10:00–23:00",
-        notice: "咔啦脆雞部位恕不指定；蛋撻禮盒現烤出爐請耐心等候。",
+        hours: "08:00–23:00",
+        notice: "早餐供應至 10:30；點選主餐可開啟肯德基自助點餐機 A/B/C/XL 配餐與食材客製化。",
         cover: "https://i.ibb.co/WbgMsYD/Gemini-Generated-Image-25ppfv25ppfv25pp.jpg",
-        tags: ["咔啦脆雞", "原味蛋撻", "XL全明星餐"],
+        tags: ["咔啦脆雞", "超極酥蛋撻", "XL全明星餐", "紙包雞"],
+        combo_brand: "kfc",
+        custom_categories: ["全部", "炸雞系列", "漢堡系列", "紙包雞＆飯食", "多人歡聚桶", "蛋撻＆甜點", "點心＆配餐", "飲料＆湯品", "早餐"],
+        custom_addons: {
+          "加購超極酥原味蛋撻（1顆）": 49,
+          "加購雙色轉轉QQ球": 55,
+          "加購雞汁風味飯": 45,
+          "加購上校雞塊（4塊）": 49
+        },
         menu: [
-          { id: "m801", name: "咔啦脆雞（2塊）", category: "主食", price: 142, desc: "金黃酥脆微辣外皮鎖住鮮嫩肉汁，肯德基招牌必點", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
-          { id: "m802", name: "咔啦雞腿堡 XL 全明星餐", category: "套餐", price: 245, desc: "含咔啦雞腿堡、咔啦脆雞1塊、香酥脆薯、原味蛋撻與中杯百事可樂", img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=400&q=80" },
-          { id: "m803", name: "原味蛋撻禮盒（6入）", category: "甜點", price: 240, desc: "163 層手工酥脆撻皮搭配香濃滑嫩奶蛋餡", img: "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=400&q=80" },
-          { id: "m804", name: "無糖茉莉綠茶（中）", category: "飲料", price: 38, is_drink: true, desc: "清爽解膩回甘無糖綠茶", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=400&q=80" }
+          { id: "m801", name: "咔啦脆雞（2塊）", category: "炸雞系列", price: 124, allow_combo: true, kiosk_preset: "kfc_fried_chicken", desc: "嚴選鮮嫩雞肉裹上獨家秘製微辣脆皮粉現炸，外皮金黃酥脆、肉汁飽滿", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
+          { id: "m802", name: "青花椒香麻脆雞（2塊）", category: "炸雞系列", price: 138, allow_combo: true, kiosk_preset: "kfc_fried_chicken", desc: "嚴選四川青花椒與多種辛香料熬製香麻醬汁淋上酥脆炸雞，麻香過癮", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
+          { id: "m803", name: "上校薄脆雞（2塊）", category: "炸雞系列", price: 124, allow_combo: true, kiosk_preset: "kfc_fried_chicken", desc: "肯德基創始經典 11 種神秘香料醃漬，薄皮嫩肉不辣口、香氣四溢", img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=400&q=80" },
+          { id: "m804", name: "爆脆無骨雞腿霸（2塊＋沾醬）", category: "炸雞系列", price: 136, allow_combo: true, kiosk_preset: "nuggets", desc: "整塊去骨大雞腿排高溫酥炸鎖住肉汁，大口吃肉免吐骨頭", img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m805", name: "咔啦雞腿堡", category: "漢堡系列", price: 95, allow_combo: true, kiosk_preset: "kfc_zinger", desc: "整塊去骨原塊雞腿排現炸酥脆微辣，搭配新鮮美生菜與特調美乃滋", img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=400&q=80" },
+          { id: "m806", name: "花生熔岩咔啦雞腿堡", category: "漢堡系列", price: 127, allow_combo: true, kiosk_preset: "kfc_peanut_zinger", desc: "香濃滑順顆粒花生熔岩醬淋在酥脆咔啦雞腿排上，鹹甜交織超人氣", img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=400&q=80" },
+          { id: "m807", name: "青花椒咔啦雞腿堡", category: "漢堡系列", price: 105, allow_combo: true, kiosk_preset: "kfc_pepper_zinger", desc: "咔啦雞腿排裹上特製青花椒香麻醬汁，椒香濃郁、酥麻帶勁", img: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=400&q=80" },
+          { id: "m808", name: "雙層咔啦雞腿堡", category: "漢堡系列", price: 145, allow_combo: true, kiosk_preset: "kfc_double_zinger", desc: "雙層厚實咔啦脆雞腿排堆疊，雙倍酥脆多汁、肉食控終極滿足", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m809", name: "義式香草紙包雞", category: "紙包雞＆飯食", price: 132, allow_combo: true, kiosk_preset: "kfc_paper_chicken", desc: "210°C 溫控蒸烤封存義式香草與雞汁精華，雞腿肉鮮嫩多汁不油膩", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
+          { id: "m810", name: "青花椒醬脆雞飯", category: "紙包雞＆飯食", price: 99, allow_combo: true, kiosk_preset: "kfc_rice_bowl", desc: "香Q雞汁風味飯鋪上無骨脆雞塊，淋上特調青花椒香麻醬與香甜玉米", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=400&q=80" },
+          { id: "m811", name: "蒜香白醬脆雞飯", category: "紙包雞＆飯食", price: 99, allow_combo: true, kiosk_preset: "kfc_rice_bowl", desc: "濃郁蒜香奶油白醬搭配金黃無骨脆雞與雞汁風味飯，飽足感滿分", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m812", name: "6塊雞歡聚分享餐", category: "多人歡聚桶", price: 479, desc: "咔啦脆雞 6 塊 ＋ 香酥脆薯（大）＋ 雙色轉轉QQ球 ＋ 百事可樂（1.25L）", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
+          { id: "m813", name: "8塊雞半半桶（無骨＋有骨）", category: "多人歡聚桶", price: 449, desc: "咔啦脆雞 4 塊 ＋ 爆脆無骨雞腿霸 4 塊（附雙沾醬），一次享受雙重口感", img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=400&q=80" },
+          { id: "m814", name: "12塊雞派對分享桶", category: "多人歡聚桶", price: 599, desc: "12 塊招牌咔啦脆雞大滿貫，家庭聚餐與派對歡聚首選", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m815", name: "超極酥原味蛋撻（單顆）", category: "蛋撻＆甜點", price: 49, is_drink: false, desc: "163 層手工酥脆撻皮搭配香濃滑嫩奶蛋內餡，現烤出爐招牌必點", img: "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=400&q=80" },
+          { id: "m816", name: "超極酥蛋撻禮盒（6入）", category: "蛋撻＆甜點", price: 257, kiosk_preset: "kfc_eggtart_box", desc: "6 顆現烤超極酥蛋撻精緻禮盒裝，可選原味或雙色綜合口味", img: "https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&fit=crop&w=400&q=80" },
+          { id: "m817", name: "雙色轉轉QQ球", category: "蛋撻＆甜點", price: 55, is_drink: false, desc: "金黃地瓜球與紫薯地瓜球外酥內Q彈，越嚼越香甜", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m818", name: "香酥脆薯（大）", category: "點心＆配餐", price: 66, desc: "外層微脆馬鈴薯條現炸金黃，搭配炸雞與漢堡絕配", img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80" },
+          { id: "m819", name: "上校雞塊（8塊）", category: "點心＆配餐", price: 92, kiosk_preset: "nuggets", desc: "嚴選優質雞肉製成外酥內嫩上校雞塊 8 塊（附糖醋醬）", img: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=400&q=80" },
+          { id: "m820", name: "雞汁風味飯", category: "點心＆配餐", price: 45, desc: "香濃上校特製雞汁拌入粒粒分明台灣白米飯", img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=400&q=80" },
+          { id: "m821", name: "紐奧良烤雞翅（2塊）", category: "點心＆配餐", price: 55, desc: "獨家紐奧良香料醃漬烘烤，微辣帶甜吮指回味", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m822", name: "百事可樂（中）", category: "飲料＆湯品", price: 38, is_drink: true, desc: "暢快沁涼經典氣泡百事可樂", img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80" },
+          { id: "m823", name: "冰無糖茉莉綠茶（中）", category: "飲料＆湯品", price: 38, is_drink: true, desc: "淡雅茉莉花香搭配回甘無糖綠茶，清爽解膩", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=400&q=80" },
+          { id: "m824", name: "玉米濃湯（大）", category: "飲料＆湯品", price: 52, is_drink: false, desc: "香濃奶香濃湯搭配飽滿甜玉米粒與火腿丁", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=400&q=80" },
+
+          { id: "m825", name: "花生起司蛋堡", category: "早餐", price: 55, kiosk_preset: "kfc_breakfast_burger", desc: "香濃花生醬搭配切達起司與現煎嫩蛋（08:00–10:30 供應）", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80" },
+          { id: "m826", name: "吮指嫩雞蛋堡", category: "早餐", price: 65, kiosk_preset: "kfc_breakfast_burger", desc: "鮮嫩原塊雞排搭配現煎太陽蛋與美乃滋（08:00–10:30 供應）", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80" }
         ]
       },
       {
@@ -1242,7 +1320,7 @@
                   qty: 2,
                   ice: "熱飲／不適用",
                   sugar: "無糖／不適用",
-                  addons: ["升級經典配餐（中薯+$38飲）"],
+                  addons: ["經典配餐（可口可樂（中））"],
                   note: ""
                 }
               ],
@@ -1559,7 +1637,6 @@
     }
 
     function renderHome() {
-      // 分類按鈕
       const tabsEl = document.getElementById("restaurant-category-tabs");
       tabsEl.innerHTML = REST_CATEGORIES.map(cat => {
         const active = cat === selectedRestCategory;
@@ -1821,6 +1898,237 @@
       `).join("");
     }
 
+    // 麥當勞／肯德基點餐機套餐與食材配方庫（0 / 1 / 2 步進控制，核心主料 min: 1 不可歸零）
+    const MCD_COMBO_OPTIONS = [
+      { id: "single", name: "單點主餐", price: 0, desc: "僅單點此主餐，不含配餐飲料與附餐", hasDrink: false, hasFries: false, hasSauce: false },
+      { id: "classic", name: "經典配餐", price: 65, desc: "中薯 ＋ $38 指定飲品", hasDrink: true, hasFries: true, hasSauce: false },
+      { id: "mcflurry", name: "炫冰配餐", price: 99, desc: "OREO 冰炫風 ＋ 小薯 ＋ $38 指定飲品", hasDrink: true, hasFries: false, hasSauce: false },
+      { id: "deluxe", name: "豪吃配餐", price: 99, desc: "6 塊麥克鷄塊 ＋ 小薯 ＋ $38 指定飲品", hasDrink: true, hasFries: false, hasSauce: true },
+      { id: "crispy", name: "勁脆配餐", price: 85, desc: "1 塊麥脆鷄腿 ＋ $38 指定飲品", hasDrink: true, hasFries: false, hasSauce: false }
+    ];
+
+    const MCD_COMBO_DRINKS = [
+      { label: "可口可樂（中）", price: 0 },
+      { label: "零卡可口可樂（中）", price: 0 },
+      { label: "雪碧（中）", price: 0 },
+      { label: "無糖綠茶（冰/中）", price: 0 },
+      { label: "無糖紅茶（冰/中）", price: 0 },
+      { label: "檸檬風味紅茶（冰/中）", price: 0 },
+      { label: "熱紅茶", price: 0 },
+      { label: "金選美式咖啡（冰/熱）", price: 12 },
+      { label: "蜂蜜奶茶（冰/熱）", price: 20 },
+      { label: "經典那堤（冰/熱）", price: 29 },
+      { label: "台灣鮮榨柳丁汁（瓶裝）", price: 28 }
+    ];
+
+    const MCD_SAUCES = ["糖醋醬", "蜂蜜芥末醬", "泰式香辣醬", "不要沾醬"];
+
+    const KFC_COMBO_OPTIONS = [
+      { id: "single", name: "單點主餐", price: 0, desc: "僅單點此主餐，不含配餐飲料與附餐", hasDrink: false, hasFries: false, hasSauce: false },
+      { id: "kfc_a", name: "A 經典配餐", price: 56, desc: "香酥脆薯（小）＋ 中杯指定飲品", hasDrink: true, hasFries: true, hasSauce: false },
+      { id: "kfc_b", name: "B 雞汁飯配餐", price: 56, desc: "雞汁風味飯 ＋ 中杯指定飲品", hasDrink: true, hasFries: false, hasSauce: false },
+      { id: "kfc_c", name: "C 雙享配餐", price: 82, desc: "上校雞塊（4塊）＋ 超極酥原味蛋撻（1顆）＋ 中杯指定飲品", hasDrink: true, hasFries: false, hasSauce: true },
+      { id: "kfc_xl", name: "XL 全明星配餐", price: 118, desc: "咔啦脆雞（1塊）＋ 香酥脆薯（小）＋ 原味蛋撻（1顆）＋ 中杯飲品", hasDrink: true, hasFries: false, hasSauce: false }
+    ];
+
+    const KFC_COMBO_DRINKS = [
+      { label: "百事可樂（中）", price: 0 },
+      { label: "七喜（中）", price: 0 },
+      { label: "冰無糖茉莉綠茶（中）", price: 0 },
+      { label: "冰檸檬紅茶（中）", price: 0 },
+      { label: "熱紅茶", price: 0 },
+      { label: "經典熱美式", price: 10 },
+      { label: "蜂蜜柚子茶（冰/熱）", price: 15 },
+      { label: "經典冰拿鐵", price: 25 }
+    ];
+
+    const KFC_SAUCES = ["糖醋醬", "蜂蜜芥末醬", "番茄醬", "不要沾醬"];
+
+    function getActiveComboProfile() {
+      if (activeRestaurant && activeRestaurant.combo_brand === "kfc") {
+        return {
+          options: KFC_COMBO_OPTIONS,
+          drinks: KFC_COMBO_DRINKS,
+          sauces: KFC_SAUCES,
+          friesUpgradeLabel: "配餐香酥脆薯升級大薯"
+        };
+      }
+      return {
+        options: MCD_COMBO_OPTIONS,
+        drinks: MCD_COMBO_DRINKS,
+        sauces: MCD_SAUCES,
+        friesUpgradeLabel: "配餐薯條升級大薯"
+      };
+    }
+
+    const KIOSK_PRESETS = {
+      big_mac: [
+        { key: "bun", name: "三層芝麻麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "100% 純牛肉片", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 30 },
+        { key: "sauce", name: "經典大麥克醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "爽脆生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "onion", name: "脫水洋蔥", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "pickle", name: "酸黃瓜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達吉事片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      double_cheeseburger: [
+        { key: "bun", name: "經典漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "100% 純牛肉片", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 30 },
+        { key: "ketchup", name: "經典番茄醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "mustard", name: "美式黃芥末醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "onion", name: "脫水洋蔥", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "pickle", name: "酸黃瓜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達吉事片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      quarter_pounder: [
+        { key: "bun", name: "芝麻漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "四盎司純牛肉排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 45 },
+        { key: "ketchup", name: "經典番茄醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "mustard", name: "美式黃芥末醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "onion", name: "新鮮切絲洋蔥", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "pickle", name: "酸黃瓜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達吉事片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      spicy_chicken: [
+        { key: "bun", name: "芝麻漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "酥脆去骨鷄腿排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 45 },
+        { key: "mayo", name: "特調美乃滋醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "爽脆美生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 }
+      ],
+      filet_o_fish: [
+        { key: "bun", name: "經典蒸麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "阿拉斯加鱈魚排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 35 },
+        { key: "tartar", name: "經典塔塔醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達吉事片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      angus_blt: [
+        { key: "bun", name: "法式布里歐麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "4盎司安格斯黑牛肉排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 50 },
+        { key: "bacon", name: "煙燻厚切培根", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 20 },
+        { key: "lettuce", name: "台灣原葉生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "tomato", name: "鮮切牛番茄片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "sauce", name: "BLT 特調醬汁", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 }
+      ],
+      mushroom_angus: [
+        { key: "bun", name: "法式布里歐麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "4盎司安格斯黑牛肉排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 50 },
+        { key: "mushroom", name: "法式香炒蕈菇醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "白切達吉事片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      blt_chicken: [
+        { key: "bun", name: "法式布里歐麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "香烙去骨鷄腿排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 45 },
+        { key: "bacon", name: "煙燻厚切培根", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 20 },
+        { key: "lettuce", name: "台灣原葉生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "tomato", name: "鮮切牛番茄片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "sauce", name: "BLT 特調醬汁", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 }
+      ],
+      breakfast_muffin: [
+        { key: "bun", name: "天然酵母滿福麵包／焙果", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "香煎豬肉片／嫩蛋", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 25 },
+        { key: "cheese", name: "切達吉事片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      nuggets: [
+        { key: "main", name: "經典鷄塊／無骨腿排本體", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "sauce", name: "隨餐附贈沾醬", type: "choice", defaultOption: "糖醋醬", options: ["糖醋醬", "蜂蜜芥末醬", "泰式香辣醬", "不要沾醬"] }
+      ],
+      fried_chicken: [
+        { key: "main", name: "麥脆鷄腿本體", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 }
+      ],
+      kfc_zinger: [
+        { key: "bun", name: "芝麻漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "咔啦脆雞腿排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 55 },
+        { key: "mayo", name: "特調美乃滋醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "爽脆美生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達起司片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      kfc_peanut_zinger: [
+        { key: "bun", name: "芝麻漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "咔啦脆雞腿排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 55 },
+        { key: "peanut", name: "濃郁花生熔岩醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "爽脆美生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達起司片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      kfc_pepper_zinger: [
+        { key: "bun", name: "芝麻漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "青花椒脆雞腿排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 58 },
+        { key: "pepper_sauce", name: "青花椒香麻醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "爽脆美生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達起司片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      kfc_double_zinger: [
+        { key: "bun", name: "芝麻漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "雙層咔啦脆雞腿排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 55 },
+        { key: "mayo", name: "特調美乃滋醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "爽脆美生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達起司片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      kfc_fried_chicken: [
+        { key: "main", name: "肯德基招牌炸雞本體", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "part", name: "炸雞部位偏好", type: "choice", defaultOption: "隨機搭配（不指定）", options: ["隨機搭配（不指定）", "偏愛雞腿／腿排", "偏愛雞胸／雞翅"] },
+        { key: "pepper_salt", name: "特製胡椒鹽包", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 }
+      ],
+      kfc_paper_chicken: [
+        { key: "main", name: "紙包雞腿排本體", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "gravy", name: "特製雞汁醬包", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "rice", name: "加配雞汁風味飯", required: false, min: 0, max: 2, defaultVal: 0, extraPrice: 40 }
+      ],
+      kfc_rice_bowl: [
+        { key: "rice_base", name: "雞汁風味飯基底", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "chicken_bites", name: "酥脆去骨脆雞塊", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 45 },
+        { key: "sauce", name: "特調淋醬", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "corn", name: "香甜玉米粒", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 }
+      ],
+      kfc_eggtart_box: [
+        { key: "box", name: "超極酥蛋撻禮盒（6入）", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        {
+          key: "flavor",
+          name: "禮盒口味組合",
+          type: "choice",
+          defaultOption: "原味蛋撻 6 入",
+          options: ["原味蛋撻 6 入", "雙色綜合（原味3＋牛奶3）", "北海道特濃牛奶蛋撻 6 入"],
+          optionPrices: { "原味蛋撻 6 入": 0, "雙色綜合（原味3＋牛奶3）": 15, "北海道特濃牛奶蛋撻 6 入": 30 }
+        }
+      ],
+      kfc_breakfast_burger: [
+        { key: "bun", name: "早餐漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "主餐嫩蛋／雞排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 25 },
+        { key: "sauce", name: "花生醬／美乃滋", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達起司片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ],
+      generic_burger: [
+        { key: "bun", name: "漢堡麵包", required: true, min: 1, max: 1, defaultVal: 1, extraPrice: 0 },
+        { key: "patty", name: "主餐肉排", required: true, min: 1, max: 2, defaultVal: 1, extraPrice: 35 },
+        { key: "sauce", name: "特製漢堡醬汁", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "lettuce", name: "新鮮生菜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "onion", name: "洋蔥", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "pickle", name: "酸黃瓜", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 0 },
+        { key: "cheese", name: "切達起司片", required: false, min: 0, max: 2, defaultVal: 1, extraPrice: 15 }
+      ]
+    };
+
+    let currentKioskIngredients = [];
+    let currentAllowCombo = false;
+    let kioskState = {
+      comboId: "single",
+      comboDrink: "可口可樂（中）",
+      comboLargeFries: false,
+      comboSauce: "糖醋醬",
+      ingredients: {}
+    };
+
+    function resolveKioskConfig(rest, item) {
+      let presetKey = item.kiosk_preset || null;
+      if (!presetKey && item.name && item.name.includes("堡") && !item.name.includes("珍珠堡")) {
+        presetKey = "generic_burger";
+      }
+      const ingredients = presetKey && KIOSK_PRESETS[presetKey]
+        ? JSON.parse(JSON.stringify(KIOSK_PRESETS[presetKey]))
+        : [];
+      const allowCombo = Boolean(item.allow_combo);
+      return { ingredients, allowCombo };
+    }
+
     function openCustomModal(restId, itemId) {
       const rest = RESTAURANTS.find(r => r.id === restId);
       if (!rest) return;
@@ -1838,36 +2146,84 @@
 
       document.getElementById("custom-item-name").textContent = item.name;
       document.getElementById("custom-item-desc").textContent = item.desc;
-      document.getElementById("custom-item-price").textContent = `單價 $${item.price}`;
+      document.getElementById("custom-item-price").textContent = `單點價 $${item.price}`;
       document.getElementById("custom-note").value = "";
       document.getElementById("custom-qty-display").textContent = "1";
 
-      // 智慧判斷是否為飲品類別
+      // 1. 飲品冰塊與甜度判斷
       const isDrink = typeof item.is_drink === "boolean"
         ? item.is_drink
         : (item.category === "飲料" || rest.category === "手搖飲");
+      const drinkSec = document.getElementById("custom-drink-section");
       const iceSel = document.getElementById("custom-ice");
       const sugarSel = document.getElementById("custom-sugar");
-      const hintEl = document.getElementById("custom-drink-hint");
 
       if (isDrink) {
+        drinkSec.classList.remove("hidden");
         iceSel.disabled = false;
         sugarSel.disabled = false;
         iceSel.value = "微冰";
         sugarSel.value = "微糖";
-        hintEl.classList.add("hidden");
       } else {
+        drinkSec.classList.add("hidden");
         iceSel.value = "熱飲／不適用";
         sugarSel.value = "無糖／不適用";
         iceSel.disabled = true;
         sugarSel.disabled = true;
-        hintEl.classList.remove("hidden");
       }
 
-      // 渲染加料與配餐升級選項
+      // 2. 初始化點餐機套餐與食材客製化狀態
+      const cfg = resolveKioskConfig(rest, item);
+      const profile = getActiveComboProfile();
+      currentKioskIngredients = cfg.ingredients;
+      currentAllowCombo = cfg.allowCombo;
+      kioskState = {
+        comboId: "single",
+        comboDrink: profile.drinks[0].label,
+        comboLargeFries: false,
+        comboSauce: profile.sauces[0],
+        ingredients: {}
+      };
+      currentKioskIngredients.forEach(ing => {
+        kioskState.ingredients[ing.key] = ing.type === "choice" ? ing.defaultOption : ing.defaultVal;
+      });
+
+      // 渲染套餐選擇區塊
+      const comboSec = document.getElementById("custom-combo-section");
+      comboSec.classList.toggle("hidden", !currentAllowCombo);
+      if (currentAllowCombo) {
+        document.getElementById("combo-drink-select").innerHTML = profile.drinks.map(d =>
+          `<option value="${escapeHtml(d.label)}" data-price="${d.price}">${escapeHtml(d.label)}${d.price > 0 ? ` (+$${d.price})` : ""}</option>`
+        ).join("");
+        document.getElementById("combo-sauce-select").innerHTML = profile.sauces.map(s =>
+          `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`
+        ).join("");
+        const friesLabelEl = document.querySelector("#combo-fries-upgrade-wrap span.font-semibold");
+        if (friesLabelEl) friesLabelEl.textContent = profile.friesUpgradeLabel;
+        document.getElementById("combo-large-fries").checked = false;
+        renderComboOptions();
+      }
+
+      // 渲染點餐機食材客製化區塊
+      const kioskSec = document.getElementById("custom-kiosk-section");
+      kioskSec.classList.toggle("hidden", currentKioskIngredients.length === 0);
+      if (currentKioskIngredients.length > 0) {
+        renderKioskIngredients();
+      }
+
+      // 3. 渲染額外加購項目
       const addonsMap = rest.custom_addons || CATEGORY_ADDONS[rest.category] || {};
+      const addonsSec = document.getElementById("custom-addons-section");
+      const addonsLabel = document.getElementById("custom-addons-label");
       const addonsEl = document.getElementById("custom-addons");
-      addonsEl.innerHTML = Object.entries(addonsMap).map(([label, price]) => `
+      const addonEntries = Object.entries(addonsMap);
+
+      addonsSec.classList.toggle("hidden", addonEntries.length === 0);
+      addonsLabel.textContent = (currentAllowCombo || currentKioskIngredients.length > 0)
+        ? "3. 額外單點加購（可複選）"
+        : "加料與配餐升級（可複選）";
+
+      addonsEl.innerHTML = addonEntries.map(([label, price]) => `
         <label class="flex items-center justify-between p-2.5 rounded-xl border border-neutral-200 hover:bg-neutral-50 cursor-pointer">
           <span class="flex items-center gap-2 font-semibold text-neutral-800">
             <input type="checkbox" value="${escapeHtml(label)}" data-price="${price}" onchange="updateCustomTotal()" class="accent-neutral-950 w-4 h-4 rounded" />
@@ -1881,6 +2237,158 @@
       openModalById("custom-modal");
     }
 
+    function renderComboOptions() {
+      const profile = getActiveComboProfile();
+      const container = document.getElementById("custom-combo-options");
+      container.innerHTML = profile.options.map(opt => {
+        const active = opt.id === kioskState.comboId;
+        return `
+          <div onclick="selectComboOption('${opt.id}')"
+            class="p-3 rounded-2xl border flex items-center justify-between cursor-pointer transition ${active ? 'border-neutral-950 bg-neutral-950 text-white shadow-sm' : 'border-neutral-200 bg-white hover:border-neutral-400 text-neutral-900'}">
+            <div class="flex items-center gap-2.5">
+              <span class="w-4 h-4 rounded-full border flex items-center justify-center ${active ? 'border-brand' : 'border-neutral-400'}">
+                ${active ? '<span class="w-2 h-2 rounded-full bg-brand"></span>' : ''}
+              </span>
+              <div>
+                <p class="font-extrabold text-xs">${escapeHtml(opt.name)}</p>
+                <p class="text-[11px] ${active ? 'text-neutral-300' : 'text-neutral-500'}">${escapeHtml(opt.desc)}</p>
+              </div>
+            </div>
+            <span class="font-extrabold text-xs ${active ? 'text-brand' : 'text-neutral-700'}">${opt.price > 0 ? `+$${opt.price}` : "單點價"}</span>
+          </div>
+        `;
+      }).join("");
+
+      const selectedCombo = profile.options.find(o => o.id === kioskState.comboId) || profile.options[0];
+      const detailsEl = document.getElementById("custom-combo-details");
+      if (selectedCombo.id === "single") {
+        detailsEl.classList.add("hidden");
+      } else {
+        detailsEl.classList.remove("hidden");
+        document.getElementById("combo-fries-upgrade-wrap").classList.toggle("hidden", !selectedCombo.hasFries);
+        document.getElementById("combo-sauce-wrap").classList.toggle("hidden", !selectedCombo.hasSauce);
+      }
+    }
+
+    function selectComboOption(comboId) {
+      kioskState.comboId = comboId;
+      renderComboOptions();
+      updateCustomTotal();
+    }
+
+    function onComboDetailChange() {
+      kioskState.comboDrink = document.getElementById("combo-drink-select").value;
+      kioskState.comboLargeFries = document.getElementById("combo-large-fries").checked;
+      kioskState.comboSauce = document.getElementById("combo-sauce-select").value;
+      updateCustomTotal();
+    }
+
+    function renderKioskIngredients() {
+      const listEl = document.getElementById("custom-kiosk-list");
+      listEl.innerHTML = currentKioskIngredients.map(ing => {
+        if (ing.type === "choice") {
+          const chosen = kioskState.ingredients[ing.key] || ing.defaultOption;
+          return `
+            <div class="p-3 rounded-2xl border border-neutral-200 bg-neutral-50/70 space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-extrabold text-neutral-900">${escapeHtml(ing.name)}</span>
+                <span class="text-[11px] font-semibold text-neutral-400">點選規格</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                ${ing.options.map(opt => {
+                  const isSelected = chosen === opt;
+                  const optPrice = ing.optionPrices ? (ing.optionPrices[opt] || 0) : 0;
+                  return `
+                    <button type="button" onclick="selectKioskChoice('${escapeHtml(ing.key)}', '${escapeHtml(opt)}')"
+                      class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition ${
+                        isSelected
+                          ? "bg-neutral-950 border-neutral-950 text-white shadow-sm"
+                          : "bg-white border-neutral-200 hover:border-neutral-400 text-neutral-700"
+                      }">
+                      ${escapeHtml(opt)}${optPrice > 0 ? ` (+$${optPrice})` : ""}
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+          `;
+        }
+
+        const val = typeof kioskState.ingredients[ing.key] === "number"
+          ? kioskState.ingredients[ing.key]
+          : ing.defaultVal;
+        const canDec = val > ing.min;
+        const canInc = val < ing.max;
+
+        let statusHtml = "";
+        if (val === 0) {
+          statusHtml = `<span class="text-[11px] font-bold text-red-600">0 · 不要</span>`;
+        } else if (val === 2) {
+          const addPriceStr = ing.extraPrice > 0 ? ` (+$${ing.extraPrice})` : "";
+          statusHtml = `<span class="text-[11px] font-bold text-brandDark">2 · 加量${escapeHtml(addPriceStr)}</span>`;
+        } else {
+          statusHtml = `<span class="text-[11px] font-semibold text-neutral-500">1 · 正常</span>`;
+        }
+
+        const numColorClass = val === 0
+          ? "text-red-600"
+          : (val === 2 ? "text-brandDark" : "text-neutral-950");
+
+        return `
+          <div class="px-3.5 py-2.5 rounded-2xl border border-neutral-200 bg-neutral-50/70 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-xs font-extrabold text-neutral-900">${escapeHtml(ing.name)}</span>
+                ${ing.required ? `<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold">基本必備 · 不可歸零</span>` : ""}
+              </div>
+              <div class="mt-0.5 flex items-center gap-2">
+                ${statusHtml}
+                ${ing.extraPrice > 0 && val < ing.max ? `<span class="text-[10px] text-neutral-400">（調至 2 +$${ing.extraPrice}）</span>` : ""}
+              </div>
+            </div>
+
+            <!-- 0 / 1 / 2 加減按鈕控制 -->
+            <div class="flex items-center border border-neutral-300 bg-white rounded-full overflow-hidden shrink-0 shadow-2xs">
+              <button type="button" onclick="adjustKioskIngredient('${escapeHtml(ing.key)}', -1)"
+                ${canDec ? "" : "disabled"}
+                aria-label="減少 ${escapeHtml(ing.name)}"
+                class="w-8 h-8 font-black text-sm flex items-center justify-center transition ${canDec ? 'hover:bg-neutral-100 text-neutral-900 cursor-pointer' : 'text-neutral-300 bg-neutral-50 cursor-not-allowed'}">−</button>
+              <span class="w-8 text-center text-sm font-extrabold ${numColorClass}">${val}</span>
+              <button type="button" onclick="adjustKioskIngredient('${escapeHtml(ing.key)}', 1)"
+                ${canInc ? "" : "disabled"}
+                aria-label="增加 ${escapeHtml(ing.name)}"
+                class="w-8 h-8 font-black text-sm flex items-center justify-center transition ${canInc ? 'hover:bg-neutral-100 text-neutral-900 cursor-pointer' : 'text-neutral-300 bg-neutral-50 cursor-not-allowed'}">+</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function adjustKioskIngredient(key, delta) {
+      const ing = currentKioskIngredients.find(i => i.key === key);
+      if (!ing || ing.type === "choice") return;
+      const cur = typeof kioskState.ingredients[key] === "number" ? kioskState.ingredients[key] : ing.defaultVal;
+      const next = Math.max(ing.min, Math.min(ing.max, cur + delta));
+      kioskState.ingredients[key] = next;
+      renderKioskIngredients();
+      updateCustomTotal();
+    }
+
+    function selectKioskChoice(key, optionLabel) {
+      kioskState.ingredients[key] = optionLabel;
+      renderKioskIngredients();
+      updateCustomTotal();
+    }
+
+    function resetKioskIngredients() {
+      currentKioskIngredients.forEach(ing => {
+        kioskState.ingredients[ing.key] = ing.type === "choice" ? ing.defaultOption : ing.defaultVal;
+      });
+      renderKioskIngredients();
+      updateCustomTotal();
+      showToast("已恢復餐點預設標準配方（1 份）");
+    }
+
     function closeCustomModal() {
       closeModalById("custom-modal");
     }
@@ -1891,20 +2399,78 @@
       updateCustomTotal();
     }
 
+    function getCalculatedCustomExtras() {
+      let extraSum = 0;
+      const summaryTags = [];
+      const profile = getActiveComboProfile();
+
+      // 1. 套餐費用與明細
+      if (currentAllowCombo && kioskState.comboId !== "single") {
+        const combo = profile.options.find(o => o.id === kioskState.comboId);
+        if (combo) {
+          extraSum += combo.price;
+          const subDetails = [];
+          if (combo.hasDrink) {
+            const drinkObj = profile.drinks.find(d => d.label === kioskState.comboDrink) || profile.drinks[0];
+            extraSum += drinkObj.price;
+            subDetails.push(drinkObj.label + (drinkObj.price > 0 ? `+$${drinkObj.price}` : ""));
+          }
+          if (combo.hasFries && kioskState.comboLargeFries) {
+            extraSum += 16;
+            subDetails.push("薯條升級大薯+$16");
+          }
+          if (combo.hasSauce) {
+            subDetails.push(`沾醬：${kioskState.comboSauce}`);
+          }
+          summaryTags.push(`${combo.name}（${subDetails.join("、")}）`);
+        }
+      }
+
+      // 2. 點餐機食材調整（0 / 1 / 2 份量與加價計算）
+      currentKioskIngredients.forEach(ing => {
+        if (ing.type === "choice") {
+          const chosen = kioskState.ingredients[ing.key] || ing.defaultOption;
+          const optPrice = ing.optionPrices ? (ing.optionPrices[chosen] || 0) : 0;
+          extraSum += optPrice;
+          if (chosen !== ing.defaultOption || optPrice > 0) {
+            summaryTags.push(`${ing.name}：${chosen}${optPrice > 0 ? ` +$${optPrice}` : ""}`);
+          }
+          return;
+        }
+        const val = typeof kioskState.ingredients[ing.key] === "number"
+          ? kioskState.ingredients[ing.key]
+          : ing.defaultVal;
+        const addedUnits = Math.max(0, val - ing.defaultVal);
+        const optPrice = addedUnits * (ing.extraPrice || 0);
+        extraSum += optPrice;
+        if (val !== ing.defaultVal || optPrice > 0) {
+          const stateText = val === 0 ? "0 (不要)" : (val === 2 ? "2 (加量)" : String(val));
+          summaryTags.push(`${ing.name}：${stateText}${optPrice > 0 ? ` +$${optPrice}` : ""}`);
+        }
+      });
+
+      // 3. 額外單點加購勾選項目
+      const checked = Array.from(document.querySelectorAll("#custom-addons input:checked"));
+      checked.forEach(el => {
+        const p = Number(el.dataset.price || 0);
+        extraSum += p;
+        summaryTags.push(el.value);
+      });
+
+      return { extraSum, summaryTags };
+    }
+
     function updateCustomTotal() {
       if (!activeMenuItem) return;
-      const checked = Array.from(document.querySelectorAll("#custom-addons input:checked"));
-      const addonSum = checked.reduce((acc, el) => acc + Number(el.dataset.price || 0), 0);
-      const total = (activeMenuItem.price + addonSum) * customQty;
+      const { extraSum } = getCalculatedCustomExtras();
+      const total = (activeMenuItem.price + extraSum) * customQty;
       document.getElementById("custom-total-btn").textContent = `$${total}`;
     }
 
     function confirmAddToCart() {
       if (!activeRestaurant || !activeMenuItem) return;
-      const checked = Array.from(document.querySelectorAll("#custom-addons input:checked"));
-      const addons = checked.map(el => el.value);
-      const addonSum = checked.reduce((acc, el) => acc + Number(el.dataset.price || 0), 0);
-      const unitPrice = activeMenuItem.price + addonSum;
+      const { extraSum, summaryTags } = getCalculatedCustomExtras();
+      const unitPrice = activeMenuItem.price + extraSum;
       const ice = document.getElementById("custom-ice").value;
       const sugar = document.getElementById("custom-sugar").value;
       const note = document.getElementById("custom-note").value.trim();
@@ -1921,12 +2487,11 @@
         qty: customQty,
         ice,
         sugar,
-        addons,
+        addons: summaryTags,
         note
       };
 
       const targetCart = isLoggedIn() ? getUser().cart : GUEST_CART;
-      // 檢查是否有完全相同客製化規格的品項，若有則直接累加數量
       const existing = targetCart.find(c =>
         c.item_id === cartItem.item_id &&
         c.ice === cartItem.ice &&
